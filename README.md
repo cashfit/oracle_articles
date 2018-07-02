@@ -1,4 +1,6 @@
-## Welcome to GitHub Pages
+## Oracle Database Sharding
+
+[Oracle Database Sharding Step by Step (1)](https://github.com/cashfit/oracle_articles/edit/master/oracle_database_sharding1.md)
 
 You can use the [editor on GitHub](https://github.com/cashfit/oracle_articles/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
 
