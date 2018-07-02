@@ -146,12 +146,3 @@ Oracle Sharding与复制紧密集成，为读取提供高可用性和额外的�
 Oracle Sharding提供的各种分片和复制方法允许客户自定义SDB的拓扑结构，以满足特定的可伸缩性和可用性需求。
 
 除了GDS，Data Guard，GoldenGate和分区之外，Oracle Sharding还集成了许多其他Oracle功能和产品，包括JDBC / OCI / ODP.NET连接池，DBCA，OEM等。
-
-
-[^code]: 代码高亮功能支持包括 Java, Python, JavaScript 在内的，**四十一**种主流编程语言。
-
-[1]: https://www.zybuluo.com/mdeditor?url=https://www.zybuluo.com/static/editor/md-help.markdown
-[2]: https://www.zybuluo.com/mdeditor?url=https://www.zybuluo.com/static/editor/md-help.markdown#cmd-markdown-高阶语法手册
-[3]: http://weibo.com/ghosert
-[4]: http://meta.math.stackexchange.com/questions/5020/mathjax-basic-tutorial-and-quick-reference
-
