@@ -1,0 +1,157 @@
+# Oracle Database Sharding Step by Step (1)
+
+------
+
+## 什么是Oracle Sharding？
+
+Oracle Sharding是针对自定义设计的OLTP应用程序的可扩展性和可用性功能，可以在不共享任何硬件或软件的独立Oracle数据库池中分发和复制数据。数据库池作为单个逻辑数据库呈现给应用程序。应用程序可以在任何平台上（数据，事务和用户）弹性扩展到任何级别，只需向池中添加额外的数据库（分片）即可。第一版本支持最多1000个分片。
+
+与自行开发的部署相比，Oracle Sharding提供了卓越的运行时性能和更简单的生命周期管理，这些部署采用了类似的可伸缩性方法。它还提供了企业数据库管理系统的优点，包括：关系模式，SQL和其他编程接口，支持复杂数据类型，在线模式更改，多核可伸缩性，高级安全性，压缩，高可用性，ACID属性，一致性阅读，使用JSON开发人员的敏捷性等等。
+
+## 目标客户和分片应用程序的示例
+
+Oracle Sharding的目标客户可以来自任何垂直行业。包括：
+
+> * 需要大规模可扩展性和大量可用性的大众传媒和金融信息服务提供商在线存储和检索信息。
+> * 航空售票系统的主要驱动分拆是故障隔离。他们想要分散数十个独立的数据库。数据库故障只能使1 / N的数据暂时不可用。
+> * 社交媒体公司可能希望为不同类别的用户/客户配置文件分配不同的分片，价格水平不同。
+> * 在线支付系统，用于线性扩展性和故障隔离，以及可能需要满足监管要求在用户所在国家数据存储。
+> * 按客户身份分类的财务和税务筹划公司，可扩展用户，工作量和交易。当税收申报季节服务需求高峰时，Sharding为这些公司提供了所需的弹性。
+> * 大型结算系统，每个客户可以通过客户ID，电话号码或用户ID进行识别。
+
+## Oracle Sharding的好处
+
+使用Oracle Database 12c第2版进行分片提供了许多好处：
+
+> * 具有完全故障隔离的线性可扩展性。专为Oracle分片设计的OLTP应用程序可以在任何平台上弹性扩展（数据，事务和用户）到任何级别，只需在额外的独立服务器上部署新的分片即可。由于计划外停机或计划维护造成的分片不可用或减速只会影响该分片的用户，但不会影响其他分片用户的应用程序的可用性或性能。只要应用程序向后兼容最旧的运行版本，每个分片就可以运行Oracle数据库的不同版本（>=12.2） - 这使得在执行数据库维护时维护应用程序的可用性变得简单。
+
+> * 简化通过自动化的许多生命周期管理任务，包括：自动创建碎片和复制，系统管理分区，单一命令部署和细粒度重新平衡。
+
+> * 使用智能，数据相关路由的卓越运行性能
+
+> * 在不牺牲企业RDBMS能力的前提下，实现分片的所有优势，包括：关系模式，SQL和其他编程接口，复杂数据类型，联机模式更改，多核可伸缩性，高级安全性，压缩，高可用性， ACID属性，一致的读取，JSON开发人员的敏捷性等等。
+
+## 分片方法
+Oracle Sharding支持三种分片方法：系统管理，用户定义和复合。
+
+> * 系统管理的分片不需要用户指定将数据映射到分片。数据通过一致的哈希使用分区自动分布在各个分片上。分区算法在分片之间均匀分布数据。这种分配旨在消除热点，并提供整个分片的统一性能。将分片添加到SDB时，Oracle Sharding会自动保持数据的均衡分配。系统管理的分片使用针对Oracle Sharding进行优化的一致哈希分区策略。系统管理的分片是最常用的分片形式。
+
+> * 对于复合分片，数据首先按列表或范围进行分区，然后通过一致的哈希进一步进行分区。这两个分片级别可以将数据映射到一组分片，然后自动保持数据在该组分片之间的均衡分布。
+
+## 系统管理分片 - 介绍
+
+Oracle Sharding是一个可伸缩性和可用性功能，支持数百个分立的Oracle数据库中数据的分发和复制。
+
+Oracle Sharding使用全局数据服务（GDS）框架来自动部署和管理分片和复制拓扑。 GDS还在SDB中提供负载均衡和基于位置的路由功能。全球服务管理器（Global Service Manager）是GDS框架的核心组件，充当Shard Director，提供从应用层到分片的请求的直接路由。分片目录是一个特殊的数据库，用于存储SDB配置数据，并提供其他功能，如跨分片查询，集中的模式维护和作为重复表的来源。
+
+Oracle Sharding与复制紧密集成，可提供高可用性和读取的额外可伸缩性。使用Oracle Active Data Guard或Oracle Data Guard支持复制。
+
+Oracle Sharding提供了自动部署分片数据库（SDB）的功能，其中包括分片和副本。 SDB管理员定义了拓扑（区域，碎片主机，复制技术等），并使用GDSCTL命令行界面以声明式规范调用DEPLOY命令。
+
+部署分片数据库的高级步骤包括：
+
+### a. 先决条件：
+
+> 注意：在12.2.0.1发行版中，所有分片和分片目录必须是非CDB数据库。
+
+> * 创建一个承载分片目录的非CDB数据库
+
+> * 在分片节点上安装Oracle数据库软件
+
+> * 在分片导向器节点上安装分片导向器（GSM）软件
+
+> 注意：对于生产部署，强烈建议为分片目录数据库配置Data Guard。
+
+### b. 使用以下命令指定拓扑布局：
+
+> * 创建SHARDCATALOG
+
+> * 添加GSM
+
+> * 开始GSM
+
+> * 添加授权证书（如果使用“创建时间”）
+
+> * 添加SHARDGROUP
+
+> * 添加INVITEDNOTE
+
+> * 创建（或添加）（每个分片）
+
+### c. 运行“部署”命令并添加全局服务以访问SDB中的任何分片：
+
+> * 部署
+
+> * 添加服务
+
+Oracle Sharding支持两种部署方法。
+第一种方法是使用“CREATE SHARD”命令，其中创建分片和复制设置的配置由Oracle Sharding管理层自动完成。
+
+“DEPLOY”命令创建分片。这是通过DBMS_SCHEDULER包（在分片目录上执行）完成的，该包与远程分片主机上的调度程序代理进行通信。代理然后调用DBCA和NETCA来创建分片和本地侦听器。创建主分片后，将使用RMAN “duplicate” 命令构建相应的备用分片。一旦建立了主分区和备用分片，“DEPLOY”命令就会使用快速启动故障切换（FSFO）配置Data Guard Broker。 FSFO Observer自动在Sharding Director上启动。本文使用“CREATE SHARD”方法引导您完成SDB部署。
+
+> 注意：为所有分片启用Archivelog和闪回。这是FSFO Observer在故障转移时执行备用自动重新初始化实例所必需的。
+
+第二种方法是使用“ADD SHARD”命令。许多客户都有自己的数据库创建标准，他们可能会选择使用自己的预先创建的数据库来部署SDB。基于ADD SHARD的部署方法通过简单地添加由用户预先构建的分片来支持这一要求。
+
+如果使用“ADD SHARD”命令进行部署，则“DEPLOY”命令将处理Data Guard，Broker和快速启动故障转移的配置。它还处理用户为正在添加的分片预配置Data Guard的情况。
+
+在12.2.0.1发行版中，支持两种复制方案。 SDB管理员可以在指定拓扑的同时选择Data Guard或Active Data Guard。
+
+在Oracle Sharding中，有两种类型的部署：
+
+1）初始部署 - 初始创建分片数据库（分片和备用数据库）称为初始部署
+
+2）增量部署 - 这允许您通过添加或删除分片来扩展或缩小池。
+
+a. 向外扩展：在系统管理的分片中，向池中添加新的分片将自动触发重新分片，其中分块自动移动以实现数据的均衡分配。
+
+b. 向内收缩：为了收缩池，可以使用“REMOVE SHARD”命令。在12.2.0.1中，在删除分片之前，块必须显式移动到其他分片。
+
+注意：除非使用“MOVE CHUNK”命令手动重新定位给定分片（正在被移除）上的所有块，否则不要使用REMOVE SHARD -FORCE。
+
+Oracle Sharding是基于Oracle分区功能实现的。分区将大表分解成更小，更易于管理的部分，称为分区。 Oracle Sharding本质上是分布式分区，因为它通过支持跨分片分配表分区来扩展分区功能。
+
+Oracle Sharding使用熟悉的SQL语法进行表分区，以指定表行如何在分片之间进行分区。分片表的分区键也是分片键。例如，下面的SQL语句可以用来创建一个分片表：
+
+
+
+```
+CREATE SHARDED TABLE Customers
+(
+  CustId      VARCHAR2(60) NOT NULL,
+  FirstName   VARCHAR2(60),
+  LastName    VARCHAR2(60),
+  Class       VARCHAR2(10),
+  Geo         VARCHAR2(8),
+  CustProfile VARCHAR2(4000),
+  Passwd      RAW(60),
+  CONSTRAINT pk_customers PRIMARY KEY (CustId),
+  CONSTRAINT json_customers CHECK (CustProfile IS JSON)
+) TABLESPACE SET TSP_SET_1
+PARTITIONBY CONSISTENT HASH (CustId) PARTITIONS AUTO;
+```
+
+该表根据custId的值横向分区。它被一致的哈希分区 - 在可伸缩分布式系统中常用的一种特殊类型的哈希分区。它为分片之间的数据迁移提供了更高的灵活性和效率，这对弹性可伸缩性非常重要。
+
+即使表的分区驻留在多个数据库中，但对于应用程序开发人员而言，表的外观和行为与单个数据库中的常规分区表完全相同。应用程序发出的SQL语句永远不会引用分片或依赖于分片的数量及其配置。
+
+分区之间的分区分配在表空间级别完成。分片表的每个分区都驻留在单独的表空间中，每个表空间都与特定的分片关联。根据分片方法，关联可以自动建立或由用户建立。
+
+当使用一致性哈希进行分片时，表空间会自动分散到各个分片中，以提供数据和工作负载的均匀分配。所有的表空间都是作为一个称为表空间集的单元来创建和管理的。 PARTITIONS AUTO表示分区数由系统自动决定。
+
+除了一致的散列之外，Oracle Sharding还支持按范围和列表进行分片，以及按范围一致的散列和列表一致散列进行组合的两级分片。
+
+Oracle Sharding与复制紧密集成，为读取提供高可用性和额外的可伸缩性。使用Oracle Data Guard和Oracle GoldenGate支持复制。复制单元可以是分片，分片的一部分或一组分片。
+
+Oracle Sharding提供的各种分片和复制方法允许客户自定义SDB的拓扑结构，以满足特定的可伸缩性和可用性需求。
+
+除了GDS，Data Guard，GoldenGate和分区之外，Oracle Sharding还集成了许多其他Oracle功能和产品，包括JDBC / OCI / ODP.NET连接池，DBCA，OEM等。
+
+
+[^code]: 代码高亮功能支持包括 Java, Python, JavaScript 在内的，**四十一**种主流编程语言。
+
+[1]: https://www.zybuluo.com/mdeditor?url=https://www.zybuluo.com/static/editor/md-help.markdown
+[2]: https://www.zybuluo.com/mdeditor?url=https://www.zybuluo.com/static/editor/md-help.markdown#cmd-markdown-高阶语法手册
+[3]: http://weibo.com/ghosert
+[4]: http://meta.math.stackexchange.com/questions/5020/mathjax-basic-tutorial-and-quick-reference
+
