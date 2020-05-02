@@ -36,7 +36,7 @@ Depending on your version of VirtualBox and Oracle Linux, there may be some slig
 
 First, install the VirtualBox software. On RHEL and its clones you do this with the following type of command as the root user.
 
-```shell
+```console
 # rpm -Uvh VirtualBox*.rpm
 ```
 
@@ -111,14 +111,14 @@ Perform either the Automatic Setup or the Manual Setup to complete the basic pre
 
 ### Automatic Setup
 If you plan to use the "oracle-rdbms-server-12cR1-preinstall" package to perform all your prerequisite setup, issue the following command.
-```shell
+```console
 # yum install -y oracle-database-preinstall-19c
 ```
 
  Earlier versions of Oracle Linux required manual setup of the Yum repository by following the instructions at http://public-yum.oracle.com.
  
  It is probably worth doing a full update as well, but this is not strictly speaking necessary.
- ```shell
+ ```console
  # yum update -y
  ```
 
@@ -127,7 +127,7 @@ If you have not used the "oracle-database-preinstall-19c" package to perform all
 
 Add the following lines to the "/etc/sysctl.conf" file, or in a file called "/etc/sysctl.d/98-oracle.conf".
 
-```shell
+```console
 fs.file-max = 6815744
 kernel.sem = 250 32000 100 128
 kernel.shmmni = 4096
@@ -144,14 +144,14 @@ fs.aio-max-nr = 1048576
 net.ipv4.ip_local_port_range = 9000 65500
 ```
 Run the following command to change the current kernel parameters.
-```shell
+```console
 /sbin/sysctl -p
 # or
 /sbin/sysctl -p /etc/sysctl.d/98-oracle.conf
 ```
 
 Add the following lines to a file called "/etc/security/limits.d/oracle-database-server-19c-preinstall.conf" file.
-```shell
+```console
 oracle   soft   nofile    1024
 oracle   hard   nofile    65536
 oracle   soft   nproc    16384
@@ -163,7 +163,7 @@ oracle   soft   memlock    134217728
 ```
 
 In addition to the basic OS installation, the following packages must be installed whilst logged in as the root user. This includes the 64-bit and 32-bit versions of some packages.
-```shell
+```console
 # From Public Yum or ULN
 yum install -y bc    
 yum install -y binutils
@@ -202,7 +202,7 @@ yum install -y sysstat
 
 Create the new groups and users.
 
-```shell
+```console
 groupadd -g 54321 oinstall
 groupadd -g 54322 dba
 groupadd -g 54323 oper
@@ -218,7 +218,7 @@ useradd -u 54321 -g oinstall -G dba,oper oracle
 
 You could define the additional groups and assign them to the "oracle" users. The would allow you to assign the individual groups during the installation. For this installation I've just used the "dba" group.
 
-```shell
+```console
 groupadd -g 54324 backupdba
 groupadd -g 54325 dgdba
 groupadd -g 54326 kmdba
@@ -234,12 +234,12 @@ useradd -u 54321 -g oinstall -G dba,oper,backupdba,dgdba,kmdba,asmdba,asmoper,as
 The following steps must be performed, whether you did the manual or automatic setup.
 Perform the following steps whilst logged into the "ol7-19c-rac1" virtual machine as the root user.
 Set the password for the "oracle" user.
-```shell
+```console
 passwd oracle
 ```
 
 Apart form the localhost address, the "/etc/hosts" file can be left blank, but I prefer to put the addresses in for reference.
-```shell
+```console
 127.0.0.1       localhost.localdomain   localhost
 # Public
 192.168.56.101   ol7-19c-rac1
@@ -256,24 +256,24 @@ Apart form the localhost address, the "/etc/hosts" file can be left blank, but I
 
 The SCAN address is commented out of the hosts file because it must be resolved using a DNS, so it can round-robin between 3 addresses on the same subnet as the public IPs. The DNS can be configured on the host machine using [BIND](https://oracle-base.com/articles/linux/dns-configuration-for-scan) or [Dnsmasq](https://oracle-base.com/articles/linux/dnsmasq-for-simple-dns-configurations), which is much simpler. If you are using Dnsmasq, put the RAC-specific entries in the hosts machines "/etc/host" file, with the SCAN entries uncommented, and restart Dnsmasq.
 Make sure the "/etc/resolv.conf" file includes a nameserver entry that points to the correct nameserver. Also, if the "domain" and "search" entries are both present, comment out one of them. For this installation my "/etc/resolv.conf" looked like this.
-```shell
+```console
 #domain localdomain
 search localdomain
 nameserver 192.168.56.1
 ```
 
 The changes to the "resolv.conf" will be overwritten by the network manager, due to the presence of the NAT interface. For this reason, this interface should now be disabled on startup. You can enable it manually if you need to access the internet from the VMs. Edit the "/etc/sysconfig/network-scripts/ifcfg-eth0" file, making the following change. This will take effect after the next restart.
-```shell
+```console
 ONBOOT=no
 ```
 
 There is no need to do the restart now. You can just run the following command.
-```shell
+```console
 # ifdown enp0s3
 ```
 
 At this point, the networking for the first node should look something like the following. Notice that eth0 has no associated IP address because it is disabled.
-```shell
+```console
 # ifconfig
 enp0s3: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
         ether 08:00:27:f6:88:78  txqueuelen 1000  (Ethernet)
@@ -321,7 +321,7 @@ virbr0: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500
 ```
 
 With this in place and the DNS configured the SCAN address is being resolved to all three IP addresses.
-```shell
+```console
 # nslookup ol7-19c-scan
 Server:		192.168.56.1
 Address:	192.168.56.1#53
@@ -332,7 +332,7 @@ Address: 192.168.56.105
 ```
 
 Amend the "/etc/security/limits.d/90-nproc.conf" file as described below. See [MOS Note [ID 1487773.1]](https://support.oracle.com/epmos/faces/DocContentDisplay?id=1487773.1)
-```shell
+```console
 # Change this
 *          soft    nproc    1024
 
@@ -341,12 +341,12 @@ Amend the "/etc/security/limits.d/90-nproc.conf" file as described below. See [M
 ```
 
 Change the setting of SELinux to permissive by editing the "/etc/selinux/config" file, making sure the SELINUX flag is set as follows.
-```shell
+```console
 SELINUX=permissive
 ```
 
 If you have the Linux firewall enabled, you will need to disable or configure it, as shown [here](https://oracle-base.com/articles/linux/oracle-linux-6-installation#firewall) or [here](https://oracle-base.com/articles/linux/linux-firewall#installation). The following is an example of disabling the firewall.
-```shell
+```console
 # systemctl stop firewalld
 # systemctl disable firewalld
 ```
@@ -354,7 +354,7 @@ If you have the Linux firewall enabled, you will need to disable or configure it
 Either configure NTP, or make sure it is not configured so the Oracle Cluster Time Synchronization Service (ctssd) can synchronize the times of the RAC nodes. 
 
 Make sure NTP (Chrony on OL7/RHEL7) is enabled.
-```shell
+```console
 # systemctl enable chronyd
 # systemctl restart chronyd
 # chronyc -a 'burst 4/4'
@@ -362,7 +362,7 @@ Make sure NTP (Chrony on OL7/RHEL7) is enabled.
 ```
 
 Create the directories in which the Oracle software will be installed.
-```shell
+```console
 mkdir -p  /u01/app/19.0.0/grid
 mkdir -p /u01/app/oracle/product/19.0.0/db_1
 chown -R oracle:oinstall /u01
@@ -370,7 +370,7 @@ chmod -R 775 /u01/
 ```
 
 Log in as the "oracle" user and add the following lines at the end of the "/home/oracle/.bash_profile" file.
-```shell
+```console
 # Oracle Settings
 export TMP=/tmp
 export TMPDIR=$TMP
@@ -394,7 +394,7 @@ alias db_env='. /home/oracle/db_env'
 ```
 
 Create a file called "/home/oracle/grid_env" with the following contents.
-```shell
+```console
 export ORACLE_SID=+ASM1
 export ORACLE_HOME=$GRID_HOME
 export PATH=$ORACLE_HOME/bin:$BASE_PATH
@@ -404,7 +404,7 @@ export CLASSPATH=$ORACLE_HOME/JRE:$ORACLE_HOME/jlib:$ORACLE_HOME/rdbms/jlib
 ```
 
 Create a file called "/home/oracle/db_env" with the following contents.
-```shell
+```console
 export ORACLE_SID=cdbrac1
 export ORACLE_HOME=$DB_HOME
 export PATH=$ORACLE_HOME/bin:$BASE_PATH
@@ -414,7 +414,7 @@ export CLASSPATH=$ORACLE_HOME/JRE:$ORACLE_HOME/jlib:$ORACLE_HOME/rdbms/jlib
 ```
 
 Once the "/home/oracle/.bash_profile" has been run, you will be able to switch between environments as follows.
-```shell
+```console
 $ grid_env
 $ echo $ORACLE_HOME
 /u01/app/19.0.0/grid
@@ -425,7 +425,7 @@ $
 ```
 
 We've made a lot of changes, so it's worth doing a reboot of the VM at this point to make sure all the changes have taken effect.
-```shell
+```console
 # shutdown -r now
 ```
 
