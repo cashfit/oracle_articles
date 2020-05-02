@@ -1066,3 +1066,67 @@ $ cd /u04/VirtualBox/ol7-19c-rac
 $ zip PostGrid.zip *.vdi
 ```
 
+## Install the Database Software
+Make sure the "ol7-19c-rac1" and "ol7-19c-rac2" virtual machines are started, then login to "ol7-19c-rac1" as the oracle user and unzip the database software to target directory on the first node. Don’t do this on the second node.
+```console
+unzip -d /u01/app/oracle/product/19.0.0/db_1 V982063-01.zip
+```
+Then start the Oracle installer. Check that all services are up using "crsctl stat res -t", as described before.
+```console
+$ db_env
+$ cd $ORACLE_HOME
+$ ./runInstaller
+```
+Select the "Set Up Software Only" option, then click the "Next" button.
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-194047@2x.jpg "Install the Database Software")
+Accept the "Oracle Real Application Clusters database installation" option by clicking the "Next" button.
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-194138@2x.jpg "Install the Database Software")
+Make sure both nodes are selected, then click the "Next" button.
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-194210@2x.jpg "Install the Database Software")
+Select the "Enterprise Edition" option, then click the "Next" button.
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-194630@2x.jpg "Install the Database Software")
+Enter "/u01/app/oracle" as the Oracle base, then click the "Next" button.
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-194639@2x.jpg "Install the Database Software")
+Select the desired operating system groups, then click the "Next" button. In this case we are only using the "dba" group.
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-194725@2x.jpg "Install the Database Software")
+Accept the default options, and click “Next” button.
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-194734@2x.jpg "Install the Database Software")
+Wait for the prerequisite check to complete. If there are any problems either click the "Fix & Check Again" button, or check the "Ignore All" checkbox and click the "Next" button.
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-195031@2x.jpg "Install the Database Software")
+
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-195100@2x.jpg "Install the Database Software")
+If you are happy with the summary information, click the "Install" button.
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-195114@2x.jpg "Install the Database Software")
+Wait while the installation takes place.
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-195943@2x.jpg "Install the Database Software")
+When prompted, run the configuration script on each node. When the scripts have been run on each node, click the "OK" button.
+
+Click the "Close" button to exit the installer.
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-200437@2x.jpg "Install the Database Software")
+Shutdown both VMs and take snapshots. Remember to make a fresh zip of the ASM disks on the host machine, which you will need to restore if you revert to the post-db snapshots.
+```console
+$ cd /u04/VirtualBox/ol7-19c-rac
+$ zip PostDB.zip *.vdi
+```
+
+## Create a Database
+Make sure the "ol7-19c-rac1" and "ol7-19c-rac2" virtual machines are started, then login to "ol7-19c-rac1" as the oracle user and start the Database Creation Asistant (DBCA).
+```console
+$ db_env
+$ dbca
+```
+Select the "Create Database" option and click the "Next" button.
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-200513@2x.jpg "Create a Database")
+Select the "Advanced Mode" option. Click the "Next" button.
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-200545@2x.jpg "Create a Database")
+Check the "Custom Database" option and click the "Next" button.
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-200603@2x.jpg "Create a Database")
+Make sure both nodes are selected, then click the "Next" button.
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-200615@2x.jpg "Create a Database")
+Enter the container database name (cdbrac), pluggable database name (pdb) and administrator password. Click the "Next" button.
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-200740@2x.jpg "Create a Database")
+Accept the default values, and click “Next” button.
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-200818@2x.jpg "Create a Database")
+Accept the default values, and click “Next” button.
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-200859@2x.jpg "Create a Database")
+Accept the default values, and click “Next” button.
