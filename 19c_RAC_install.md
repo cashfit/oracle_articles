@@ -48,7 +48,7 @@ We need to make sure a host-only network is configured and check/modify the IP r
 - Start VirtualBox from the menu.
 - Select the "Tools" option.
 - Click "Network" in the pop out menu.
-
+![VBox Network](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-113524@2x.jpg "VBox network")
 - Click the "Create" button on the right size of the screen. A network called "vboxnet0" will be created.
 
 - If you want to use a different subnet for your public addresses you can change the network details here. Just make sure the subnet you choose doesn't match any real subnets on your network. I've decided to stick with the default, which for me is "192.168.56.X".
