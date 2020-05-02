@@ -21,7 +21,7 @@ Before you launch into this installation, here are a few things to consider.
 - When doing this installation on my server, I split the virtual disks on to different physical disks. This is not necessary, but makes things run a bit faster.
 - This will probably take over three hours to complete. Maybe a lot longer if you have severe memory or disk speed limitations.
 
-##Download Software
+## Download Software
 
 Download the following software.
 - [Oracle Linux 7](http://edelivery.oracle.com/linux) (Use the latest spin eg. 7.7)
@@ -32,7 +32,7 @@ This article has been updated for the 19c release, but the installation is essen
 
 Depending on your version of VirtualBox and Oracle Linux, there may be some slight variation in how the screen shots look.
 
-##VirtualBox Installation
+## VirtualBox Installation
 
 First, install the VirtualBox software. On RHEL and its clones you do this with the following type of command as the root user.
 
@@ -42,7 +42,7 @@ First, install the VirtualBox software. On RHEL and its clones you do this with 
 
 The package name will vary depending on the host distribution you are using. Once complete, VirtualBox is started from the menu.
 
-##VirtualBox Network Setup
+## VirtualBox Network Setup
 We need to make sure a host-only network is configured and check/modify the IP range for that network. This will be the public network for our RAC installation.
 
 - Start VirtualBox from the menu.
@@ -54,7 +54,7 @@ We need to make sure a host-only network is configured and check/modify the IP r
 - If you want to use a different subnet for your public addresses you can change the network details here. Just make sure the subnet you choose doesn't match any real subnets on your network. I've decided to stick with the default, which for me is "192.168.56.X".
 ![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-113559@2x.jpg "VirtualBox Network Setup")
 
-##Virtual Machine Setup
+## Virtual Machine Setup
 
 Now we must define the two virtual RAC nodes. We can save time by defining one VM, then cloning it when it is installed.
 
@@ -82,4 +82,4 @@ Move "Hard Disk" to the top of the boot order and uncheck the "Floppy" option, t
 ![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-113747@2x.jpg "Virtual Machine Setup")
 The virtual machine is now configured so we can start the guest operating system installation.
 
-##Guest Operating System Installation
+## Guest Operating System Installation
