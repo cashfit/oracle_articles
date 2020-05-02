@@ -363,7 +363,7 @@ Make sure NTP (Chrony on OL7/RHEL7) is enabled.
 
 Create the directories in which the Oracle software will be installed.
 ```console
-mkdir -p  /u01/app/19.0.0/grid
+mkdir -p /u01/app/19.0.0/grid
 mkdir -p /u01/app/oracle/product/19.0.0/db_1
 chown -R oracle:oinstall /u01
 chmod -R 775 /u01/
