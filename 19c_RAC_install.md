@@ -1130,3 +1130,99 @@ Accept the default values, and click “Next” button.
 Accept the default values, and click “Next” button.
 ![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-200859@2x.jpg "Create a Database")
 Accept the default values, and click “Next” button.
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-200942@2x.jpg "Create a Database")
+Accept the default values, and click “Next” button.
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-201022@2x.jpg "Create a Database")
+
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-201044@2x.jpg "Create a Database")
+Deselect the CVU and EM options, and click “Next” button.
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-201119@2x.jpg "Create a Database")
+Enter dba password, and click “Next” button.
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-201137@2x.jpg "Create a Database")
+
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-201149@2x.jpg "Create a Database")
+
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-201216@2x.jpg "Create a Database")
+
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-201309@2x.jpg "Create a Database")
+Select “Ignore All”, and click “Next” button.
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-201424@2x.jpg "Create a Database")
+If you are happy with the summary information, click the "Finish" button.
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-201435@2x.jpg "Create a Database")
+Wait while the database creation takes place.
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-202201@2x.jpg "Create a Database")
+If you want to modify passwords, click the "Password Management" button. When finished, click the "Close" button.
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-233237@2x.jpg "Create a Database")
+The RAC database creation is now complete.
+
+## Check the Status of the RAC
+There are several ways to check the status of the RAC. The srvctl utility shows the current configuration and status of the RAC database.
+```console
+[oracle@ol7-19c-rac1 cdbrac]$ grid_env
+[oracle@ol7-19c-rac1 cdbrac]$ srvctl config database -d cdbrac
+Database unique name: cdbrac
+Database name: cdbrac
+Oracle home: /u01/app/oracle/product/19.0.0/db_1
+Oracle user: oracle
+Spfile: +DATA/CDBRAC/PARAMETERFILE/spfile.275.1024741213
+Password file: +DATA/CDBRAC/PASSWORD/pwdcdbrac.258.1024730137
+Domain: 
+Start options: open
+Stop options: immediate
+Database role: PRIMARY
+Management policy: AUTOMATIC
+Server pools: 
+Disk Groups: DATA
+Mount point paths: 
+Services: 
+Type: RAC
+Start concurrency: 
+Stop concurrency: 
+OSDBA group: dba
+OSOPER group: 
+Database instances: cdbrac1,cdbrac2
+Configured nodes: ol7-19c-rac1,ol7-19c-rac2
+CSS critical: no
+CPU count: 0
+Memory target: 0
+Maximum memory: 0
+Default network number for database services: 
+Database is administrator managed
+[oracle@ol7-19c-rac1 cdbrac]$ srvctl status database -d cdbrac
+Instance cdbrac1 is running on node ol7-19c-rac1
+Instance cdbrac2 is running on node ol7-19c-rac2
+[oracle@ol7-19c-rac1 cdbrac]$
+```
+The V$ACTIVE_INSTANCES view can also display the current status of the instances.
+```console
+[oracle@ol7-19c-rac1 cdbrac]$ sqlplus / as sysdba
+
+SQL*Plus: Release 19.0.0.0.0 - Production on Tue Nov 19 10:34:25 2019
+Version 19.3.0.0.0
+
+Copyright (c) 1982, 2019, Oracle.  All rights reserved.
+
+
+Connected to:
+Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
+Version 19.3.0.0.0
+
+SQL> SELECT inst_name FROM v$active_instances;
+
+INST_NAME
+--------------------------------------------------------------------------------
+ol7-19c-rac1:cdbrac1
+ol7-19c-rac2:cdbrac2
+
+SQL>
+```
+
+## Reference
+For more information see:
+Grid Infrastructure Installation and Upgrade Guide for Linux
+https://docs.oracle.com/en/database/oracle/oracle-database/19/cwlin/index.html
+Database Installation Guide for Linux
+https://docs.oracle.com/en/database/oracle/oracle-database/19/ladbi/index.html
+Oracle Database 12c Release 2 (12.2) RAC On Oracle Linux 7 Using VirtualBox
+https://oracle-base.com/articles/12c/oracle-db-12cr2-rac-installation-on-oracle-linux-7-using-virtualbox
+
