@@ -1,6 +1,6 @@
 # Oracle Database 19c RAC On Oracle Linux 7 Using VirtualBox
 
-**Last update 2019-11-20**
+**Last update 2019-11-20, published on 2020-5-2**
 
 This article describes the installation of Oracle Database 19c RAC on Linux (Oracle Linux 7.7 64-bit) using VirtualBox (6.0.10) with no additional shared disk devices.
 
@@ -60,13 +60,26 @@ Now we must define the two virtual RAC nodes. We can save time by defining one V
 
 Start VirtualBox and click the "New" button on the toolbar. Enter the name "ol7-19c-rac1", OS "Linux" and Version "Oracle (64 bit)", then click the "Continue" button.
 ![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-112613@2x.jpg "Virtual Machine Setup")
-
 Enter "4096" as the base memory size, then click the "Continue" button.
 ![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-112838@2x.jpg "Virtual Machine Setup")
-
 Accept the default option to create a new virtual hard disk by clicking the "Create" button.
 ![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-112911@2x.jpg "Virtual Machine Setup")
-
 Acccept the default hard drive file type by clicking the "Continue" button.
 ![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-112924@2x.jpg "Virtual Machine Setup")
+Acccept the "Dynamically allocated" option by clicking the "Continue" button.
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-112939@2x.jpg "Virtual Machine Setup")
+Accept the default location and set the size to "50G", then click the "Create" button. If you can spread the virtual disks onto different physical disks, that will improve performance.
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-113049@2x.jpg "Virtual Machine Setup")
+The "ol7-19c-rac1" VM will appear on the left hand pane. Scroll down the details on the right and click on the "Network" link.
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-113536@2x.jpg "Virtual Machine Setup")
+Make sure "Adapter 1" is enabled, set to "NAT", then click on the "Adapter 2" tab.
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-113617@2x.jpg "Virtual Machine Setup")
+Make sure "Adapter 2" is enabled, set to "Host-only Adapter", then click on the "Adapter 3" tab.
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-113639@2x.jpg "Virtual Machine Setup")
+Make sure "Adapter 3" is enabled, set to "Internal Network", then click on the "System" section.
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-113708@2x.jpg "Virtual Machine Setup")
+Move "Hard Disk" to the top of the boot order and uncheck the "Floppy" option, then click the "OK" button.
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-113747@2x.jpg "Virtual Machine Setup")
+The virtual machine is now configured so we can start the guest operating system installation.
 
+##Guest Operating System Installation
