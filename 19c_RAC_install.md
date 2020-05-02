@@ -1226,3 +1226,4 @@ https://docs.oracle.com/en/database/oracle/oracle-database/19/ladbi/index.html
 Oracle Database 12c Release 2 (12.2) RAC On Oracle Linux 7 Using VirtualBox
 https://oracle-base.com/articles/12c/oracle-db-12cr2-rac-installation-on-oracle-linux-7-using-virtualbox
 
+### End
