@@ -1,6 +1,6 @@
 # Oracle Database 19c RAC On Oracle Linux 7 Using VirtualBox
 
-**Last update 2019-11-20, publish 2020-5-2**
+**Last update 2019-11-20**
 
 This article describes the installation of Oracle Database 19c RAC on Linux (Oracle Linux 7.7 64-bit) using VirtualBox (6.0.10) with no additional shared disk devices.
 
@@ -48,9 +48,25 @@ We need to make sure a host-only network is configured and check/modify the IP r
 - Start VirtualBox from the menu.
 - Select the "Tools" option.
 - Click "Network" in the pop out menu.
-![VBox Network](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-113524@2x.jpg "VBox network")
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-113524@2x.jpg "VirtualBox Network Setup")
 - Click the "Create" button on the right size of the screen. A network called "vboxnet0" will be created.
-
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-113536@2x.jpg "VirtualBox Network Setup")
 - If you want to use a different subnet for your public addresses you can change the network details here. Just make sure the subnet you choose doesn't match any real subnets on your network. I've decided to stick with the default, which for me is "192.168.56.X".
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-113559@2x.jpg "VirtualBox Network Setup")
 
 ##Virtual Machine Setup
+
+Now we must define the two virtual RAC nodes. We can save time by defining one VM, then cloning it when it is installed.
+
+Start VirtualBox and click the "New" button on the toolbar. Enter the name "ol7-19c-rac1", OS "Linux" and Version "Oracle (64 bit)", then click the "Continue" button.
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-112613@2x.jpg "Virtual Machine Setup")
+
+Enter "4096" as the base memory size, then click the "Continue" button.
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-112838@2x.jpg "Virtual Machine Setup")
+
+Accept the default option to create a new virtual hard disk by clicking the "Create" button.
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-112911@2x.jpg "Virtual Machine Setup")
+
+Acccept the default hard drive file type by clicking the "Continue" button.
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-112924@2x.jpg "Virtual Machine Setup")
+
