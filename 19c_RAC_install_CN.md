@@ -1067,12 +1067,12 @@ $ cd /u04/VirtualBox/ol7-19c-rac
 $ zip PostGrid.zip *.vdi
 ```
 
-## Install the Database Software
-Make sure the "ol7-19c-rac1" and "ol7-19c-rac2" virtual machines are started, then login to "ol7-19c-rac1" as the oracle user and unzip the database software to target directory on the first node. Don’t do this on the second node.
+## 安装数据库软件
+确保启动了“ol7-19c-rac1”和“ol7-19c-rac2”虚拟机，然后以oracle用户身份登录到“ol7-19c-rac1”，并将数据库软件解压缩到第一个节点上的目标目录。不要在第二个节点上执行此操作。
 ```console
 unzip -d /u01/app/oracle/product/19.0.0/db_1 V982063-01.zip
 ```
-Then start the Oracle installer. Check that all services are up using "crsctl stat res -t", as described before.
+然后启动Oracle安装程序。如前所述，使用“crsctl stat res -t”检查所有服务是否正常运行。
 ```console
 $ db_env
 $ cd $ORACLE_HOME
