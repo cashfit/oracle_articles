@@ -118,9 +118,9 @@ If you plan to use the "oracle-rdbms-server-12cR1-preinstall" package to perform
 # yum install -y oracle-database-preinstall-19c
 ```
 
- Earlier versions of Oracle Linux required manual setup of the Yum repository by following the instructions at http://public-yum.oracle.com.
+Earlier versions of Oracle Linux required manual setup of the Yum repository by following the instructions at http://public-yum.oracle.com.
  
- It is probably worth doing a full update as well, but this is not strictly speaking necessary.
+It is probably worth doing a full update as well, but this is not strictly speaking necessary.
  ```console
  # yum update -y
  ```
@@ -727,7 +727,7 @@ ping -c 3 ol7-19c-rac1-priv
 ping -c 3 ol7-19c-rac2
 ping -c 3 ol7-19c-rac2-priv
 ```
- Check the SCAN address is still being resolved properly on both nodes.
+Check the SCAN address is still being resolved properly on both nodes.
 ```console
 # nslookup ol7-19c-scan
 Server:		192.168.56.1
