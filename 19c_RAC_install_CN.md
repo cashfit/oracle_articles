@@ -1078,6 +1078,151 @@ $ db_env
 $ cd $ORACLE_HOME
 $ ./runInstaller
 ```
-Select the "Set Up Software Only" option, then click the "Next" button.
+选择“仅设置软件”选项，然后单击“下一步”按钮。
 ![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-194047@2x.jpg "Install the Database Software")
-Accept the "Oracle Real Application 
+通过单击“下一步”按钮接受“Oracle Real Application Clusters数据库安装”选项。
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-194138@2x.jpg "Install the Database Software")
+确保两个节点都被选中，然后单击“下一步”按钮。
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-194210@2x.jpg "Install the Database Software")
+选择“企业版”选项，然后单击“下一步”按钮。
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-194630@2x.jpg "Install the Database Software")
+输入“/u01/app/oracle”作为Oracle base，然后单击“下一步”按钮。
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-194639@2x.jpg "Install the Database Software")
+选择所需的操作系统组，然后单击“下一步”按钮。 在这种情况下，我们仅使用“dba”组。
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-194725@2x.jpg "Install the Database Software")
+接受默认选项，然后单击“下一步”按钮。
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-194734@2x.jpg "Install the Database Software")
+等待先决条件检查完成。 如果有任何问题，请单击“修复并再次检查”按钮，或选中“全部忽略”复选框，然后单击“下一步”按钮。
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-195031@2x.jpg "Install the Database Software")
+
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-195100@2x.jpg "Install the Database Software")
+如果您对摘要信息感到满意，请单击“安装”按钮。
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-195114@2x.jpg "Install the Database Software")
+等待安装。
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-195943@2x.jpg "Install the Database Software")
+出现提示时，请在每个节点上运行配置脚本。 在每个节点上运行脚本后，单击“确定”按钮。
+
+单击“关闭”按钮退出安装程序。
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-200437@2x.jpg "Install the Database Software")
+关闭两个VM并拍摄快照。 切记在主机上重新压缩ASM磁盘，如果还原到数据库后快照，则需要恢复该压缩。
+```console
+$ cd /u04/VirtualBox/ol7-19c-rac
+$ zip PostDB.zip *.vdi
+```
+
+## 创建一个数据库
+确保已启动“ol7-19c-rac1”和“ol7-19c-rac2”虚拟机，然后以oracle用户身份登录“ol7-19c-rac1”并启动数据库创建辅助（DBCA）。
+```console
+$ db_env
+$ dbca
+```
+选择“创建数据库”选项，然后单击“下一步”按钮。
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-200513@2x.jpg "Create a Database")
+选择“高级模式”选项。 点击“下一步”按钮。
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-200545@2x.jpg "Create a Database")
+检查“自定义数据库”选项，然后单击“下一步”按钮。
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-200603@2x.jpg "Create a Database")
+确保两个节点都被选中，然后单击“下一步”按钮。
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-200615@2x.jpg "Create a Database")
+输入容器数据库名称（cdbrac），可插入数据库名称（pdb）和管理员密码。 点击“下一步”按钮。
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-200740@2x.jpg "Create a Database")
+接受默认值，然后单击“下一步”按钮。
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-200818@2x.jpg "Create a Database")
+接受默认值，然后单击“下一步”按钮。
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-200859@2x.jpg "Create a Database")
+接受默认值，然后单击“下一步”按钮。
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-200942@2x.jpg "Create a Database")
+接受默认值，然后单击“下一步”按钮。
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-201022@2x.jpg "Create a Database")
+
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-201044@2x.jpg "Create a Database")
+取消选择CVU和EM选项，然后单击“下一步”按钮。
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-201119@2x.jpg "Create a Database")
+输入dba密码，然后单击“下一步”按钮。
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-201137@2x.jpg "Create a Database")
+
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-201149@2x.jpg "Create a Database")
+
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-201216@2x.jpg "Create a Database")
+
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-201309@2x.jpg "Create a Database")
+选择“全部忽略”，然后单击“下一步”按钮。
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-201424@2x.jpg "Create a Database")
+如果您对摘要信息感到满意，请单击“完成”按钮。
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-201435@2x.jpg "Create a Database")
+等待数据库创建完成。
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-202201@2x.jpg "Create a Database")
+如果要修改密码，请单击“密码管理”按钮。 完成后，单击“关闭”按钮。
+![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-233237@2x.jpg "Create a Database")
+RAC数据库创建现已完成。
+
+## 检查RAC的状态
+有几种方法可以检查RAC的状态。 srvctl实用程序显示RAC数据库的当前配置和状态。
+```console
+[oracle@ol7-19c-rac1 cdbrac]$ grid_env
+[oracle@ol7-19c-rac1 cdbrac]$ srvctl config database -d cdbrac
+Database unique name: cdbrac
+Database name: cdbrac
+Oracle home: /u01/app/oracle/product/19.0.0/db_1
+Oracle user: oracle
+Spfile: +DATA/CDBRAC/PARAMETERFILE/spfile.275.1024741213
+Password file: +DATA/CDBRAC/PASSWORD/pwdcdbrac.258.1024730137
+Domain: 
+Start options: open
+Stop options: immediate
+Database role: PRIMARY
+Management policy: AUTOMATIC
+Server pools: 
+Disk Groups: DATA
+Mount point paths: 
+Services: 
+Type: RAC
+Start concurrency: 
+Stop concurrency: 
+OSDBA group: dba
+OSOPER group: 
+Database instances: cdbrac1,cdbrac2
+Configured nodes: ol7-19c-rac1,ol7-19c-rac2
+CSS critical: no
+CPU count: 0
+Memory target: 0
+Maximum memory: 0
+Default network number for database services: 
+Database is administrator managed
+[oracle@ol7-19c-rac1 cdbrac]$ srvctl status database -d cdbrac
+Instance cdbrac1 is running on node ol7-19c-rac1
+Instance cdbrac2 is running on node ol7-19c-rac2
+[oracle@ol7-19c-rac1 cdbrac]$
+```
+V$ACTIVE_INSTANCES视图还可以显示实例的当前状态。
+```console
+[oracle@ol7-19c-rac1 cdbrac]$ sqlplus / as sysdba
+
+SQL*Plus: Release 19.0.0.0.0 - Production on Tue Nov 19 10:34:25 2019
+Version 19.3.0.0.0
+
+Copyright (c) 1982, 2019, Oracle.  All rights reserved.
+
+
+Connected to:
+Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
+Version 19.3.0.0.0
+
+SQL> SELECT inst_name FROM v$active_instances;
+
+INST_NAME
+--------------------------------------------------------------------------------
+ol7-19c-rac1:cdbrac1
+ol7-19c-rac2:cdbrac2
+
+SQL>
+```
+
+## 参考
+有关更多信息，请参见：
+- [Grid Infrastructure Installation and Upgrade Guide for Linux](https://docs.oracle.com/en/database/oracle/oracle-database/19/cwlin/index.html)  
+- [Database Installation Guide for Linux](https://docs.oracle.com/en/database/oracle/oracle-database/19/ladbi/index.html)
+- [Oracle Database 12c Release 2 (12.2) RAC On Oracle Linux 7 Using VirtualBox](https://oracle-base.com/articles/12c/oracle-db-12cr2-rac-installation-on-oracle-linux-7-using-virtualbox)
+
+### 结束
+
