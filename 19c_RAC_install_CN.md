@@ -1,6 +1,6 @@
 # 使用VirtualBox在Oracle Linux 7上安装Oracle Database 19c RAC
 
-**最新更新为2019-11-20，发布于2020-5-3**
+**最新更新为2019-11-20，发布于2020-5-4**
 
 本文介绍了使用VirtualBox（6.0.10）在Linux（Oracle Linux 7.7 64位）上安装Oracle Database 19c RAC，而没有其他共享磁盘设备的情况。
 
@@ -610,12 +610,12 @@ brw-rw----. 1 oracle dba  8, 65 Apr 25 14:11 /dev/sde1
 现在，已为网格基础结构配置了共享磁盘。
 
 ## 克隆虚拟机
-Later versions of VirtualBox allow you to clone VMs, but these also attempt to clone the shared disks, which is not what we want. Instead we must manually clone the VM.
-Shut down the "ol7-19c-rac1" virtual machine using the following command.
+更高版本的VirtualBox允许您克隆VM，但这些虚拟机还会尝试克隆共享磁盘，这不是我们想要的。 相反，我们必须手动克隆VM。
+使用以下命令关闭“ol7-19c-rac1”虚拟机。
 ```console
 # shutdown -h now
 ```
-Manually clone the "ol7-19c-rac1.vdi" disk using the following commands on the host server.
+在主机服务器上使用以下命令手动克隆“ol7-19c-rac1.vdi”磁盘。
 ```console
 $ mkdir -p /u03/VirtualBox/ol7-19c-rac2
 $ VBoxManage clonehd /u01/VirtualBox/ol7-19c-rac1/ol7-19c-rac1.vdi /u03/VirtualBox/ol7-19c-rac2/ol7-19c-rac2.vdi
@@ -624,9 +624,9 @@ Rem Windows
 mkdir "C:\VirtualBox\ol7-19c-rac2"
 "c:\Program Files\Oracle\VirtualBox\VBoxManage" clonehd "C:\VirtualBox\ol7-19c-rac1\ol7-19c-rac1.vdi" "C:\VirtualBox\ol7-19c-rac2\ol7-19c-rac2.vdi"
 ```
-Create the "ol7-19c-rac2" virtual machine in VirtualBox in the same way as you did for "ol7-19c-rac1", with the exception of using an existing "ol7-19c-rac2.vdi" virtual hard drive.
+除了使用现有的“ol7-19c-rac2.vdi”虚拟硬盘驱动器外，以与“ol7-19c-rac1”相同的方式在VirtualBox中创建“ol7-19c-rac2”虚拟机。
 
-Remember to add the three network adaptor as you did on the "ol7-19c-rac1" VM. When the VM is created, attach the shared disks to this VM.
+记住要像在“ol7-19c-rac1” VM上那样添加三个网络适配器。 创建虚拟机后，将共享磁盘连接到该虚拟机。
 ```console
 $ # Linux : Switch to the shared storage location and attach them.
 $ cd /u04/VirtualBox/ol7-19c-rac
@@ -646,33 +646,33 @@ cd C:\VirtualBox\ol7-19c-rac
 "c:\Program Files\Oracle\VirtualBox\VBoxManage" storageattach ol7-19c-rac2 --storagectl "SATA" --port 3 --device 0 --type hdd --medium asm3.vdi --mtype shareable
 "c:\Program Files\Oracle\VirtualBox\VBoxManage" storageattach ol7-19c-rac2 --storagectl "SATA" --port 4 --device 0 --type hdd --medium asm4.vdi --mtype shareable
 ```
-Start the "ol7-19c-rac2" virtual machine by clicking the "Start" button on the toolbar. Ignore any network errors during the startup.
+通过单击工具栏上的“开始”按钮来启动“ol7-19c-rac2”虚拟机。 在启动过程中忽略任何网络错误。
 
-Log in to the "ol7-19c-rac2" virtual machine as the "root" user so we can reconfigure the network settings to match the following.
-- hostname: ol7-19c-rac2.localdomain
-- enp0s3 (eth0): DHCP (*Not* Connect Automatically)
-- enp0s8 (eth1): IP=192.168.56.102, Subnet=255.255.255.0, Gateway=192.168.56.1, DNS=192.168.56.1, Search=localdomain (Connect Automatically)
-- enp0s9 (eth2): IP=192.168.1.102, Subnet=255.255.255.0, Gateway=<blank>, DNS=<blank>, Search=<blank> (Connect Automatically)
+以“ root”用户身份登录到“ ol7-19c-rac2”虚拟机，以便我们可以重新配置网络设置以匹配以下内容。
+- 主机名：ol7-19c-rac2.localdomain
+- enp0s3 (eth0): DHCP （*不*自动连接）
+- enp0s8 (eth1): IP=192.168.56.102, Subnet=255.255.255.0, Gateway=192.168.56.1, DNS=192.168.56.1, Search=localdomain （自动连接）
+- enp0s9 (eth2): IP=192.168.1.102, Subnet=255.255.255.0, Gateway=<blank>, DNS=<blank>, Search=<blank> （自动连接）
 
-Amend the hostname in the "/etc/hostname" file.
+修改“/etc/hostname”文件中的主机名。
 ```console
 ol7-19c-rac2.localdomain
 ```
-Unlike previous Linux versions, we shouldn't have to edit the MAC address associated with the network adapters, but we will have to alter their IP addresses.
+与以前的Linux版本不同，我们不必编辑与网络适配器关联的MAC地址，但是我们必须更改其IP地址。
 
-Edit the "/etc/sysconfig/network-scripts/ifcfg-enp0s8" (eth1), amending only the IPADDR settings as follows and deleting the UUID entry.
+编辑“/etc/sysconfig/network-scripts/ifcfg-enp0s8”（eth1），仅如下修改IPADDR设置并删除UUID条目。
 ```console
 IPADDR=192.168.56.102 
 ```
-Edit the "/etc/sysconfig/network-scripts/ifcfg-enp0s9" (eth2), amending only the IPADDR settings as follows and deleting the UUID entry.
+编辑“/etc/sysconfig/network-scripts/ifcfg-enp0s9”（eth2），仅修改IPADDR设置，如下所示，并删除UUID条目。
 ```console
 IPADDR=192.168.1.102 
 ```
-Restart the virtual machines.
+重新启动虚拟机。
 ```console
 # shutdown -r now
 ```
-At this point, the networking for the second node should look something like the following. Notice that eth0 has no associated IP address because it is disabled.
+此时，第二个节点的联网应如下所示。 请注意，enp0s3没有关联的IP地址，因为它已被禁用。
 ```console
 # ifconfig
 enp0s3 : flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
@@ -711,21 +711,21 @@ lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
 
 #
 ```
-Edit the "/home/oracle/.bash_profile" file on the "ol7-19c-rac2" node to correct the ORACLE_SID and ORACLE_HOSTNAME values.
+编辑“ol7-19c-rac2”节点上的“/home/oracle/.bash_profile”文件，以更正ORACLE_SID和ORACLE_HOSTNAME值。
 ```console
 export ORACLE_SID=cdbrac2
 export ORACLE_HOSTNAME=ol7-19c-rac2.localdomain
 ```
-Also, amend the ORACLE_SID setting in the "/home/oracle/db_env" and "/home/oracle/grid_env" files.
+另外，修改“/home/oracle/db_env”和“/home/oracle/grid_env”文件中的ORACLE_SID设置。
 
-Restart the "ol7-19c-rac2" virtual machine and start the "ol7-19c-rac1" virtual machine. When both nodes have started, check they can both ping all the public and private IP addresses using the following commands.
+重新启动“ol7-19c-rac2”虚拟机，然后启动“ol7-19c-rac1”虚拟机。 当两个节点都启动后，请使用以下命令检查它们是否可以ping通所有公用和专用IP地址。
 ```console
 ping -c 3 ol7-19c-rac1
 ping -c 3 ol7-19c-rac1-priv
 ping -c 3 ol7-19c-rac2
 ping -c 3 ol7-19c-rac2-priv
 ```
- Check the SCAN address is still being resolved properly on both nodes.
+检查两个节点上的SCAN地址是否仍能正确解析。
 ```console
 # nslookup ol7-19c-scan
 Server:		192.168.56.1
@@ -736,8 +736,8 @@ Address: 192.168.56.105
 
 #
 ```
-At this point the virtual IP addresses defined in the "/etc/hosts" file will not work, so don't bother testing them.
-Check the UDEV rules are working on both machines.
+此时，在“/etc/hosts”文件中定义的虚拟IP地址将不起作用，因此不必费心测试它们。
+检查UDEV规则是否在两台计算机上都起作用。
 ```console
 # ls -al /dev/oracleasm/*
 lrwxrwxrwx. 1 root root 7 Sep 18 08:19 /dev/oracleasm/asm-disk1 -> ../sdb1
@@ -746,13 +746,13 @@ lrwxrwxrwx. 1 root root 7 Sep 18 08:19 /dev/oracleasm/asm-disk3 -> ../sdd1
 lrwxrwxrwx. 1 root root 7 Sep 18 08:19 /dev/oracleasm/asm-disk4 -> ../sde1
 #
 ```
-Prior to 11gR2 we would probably use the "runcluvfy.sh" utility in the clusterware root directory to check the prerequisites have been met. If you are intending to configure SSH connectivity using the installer this check should be omitted as it will always fail. If you want to [setup SSH connectivity manually](https://oracle-base.com/articles/linux/user-equivalence-configuration-on-linux), then once it is done you can run the "runcluvfy.sh" with the following command.
+在11gR2之前，我们可能会在集群件根目录中使用“runcluvfy.sh”实用程序来检查是否满足先决条件。如果打算使用安装程序配置SSH连接，则应省略此检查，因为它总是会失败。如果要[手动设置SSH连接](https://oracle-base.com/articles/linux/user-equivalence-configuration-on-linux)，则一旦完成，您可以运行“runcluvfy.sh”使用以下命令。
 ```console
 /mountpoint/clusterware/runcluvfy.sh stage -pre crsinst -n ol7-19c-rac1,ol7-19c-rac2 -verbose
 ```
-If you get any failures be sure to correct them before proceeding.
-The virtual machine setup is now complete.
-Before moving forward you should probably shut down your VMs and take snapshots of them. If any failures happen beyond this point it is probably better to switch back to those snapshots, clean up the shared drives and start the grid installation again. An alternative to [cleaning up the shared disks](https://oracle-base.com/articles/rac/clean-up-a-failed-grid-infrastructure-installation#asm_disks) is to back them up now using zip and just replace them in the event of a failure.
+如果遇到任何故障，请确保在继续操作之前进行纠正。
+虚拟机设置现已完成。
+在继续之前，您可能应该关闭虚拟机并对其快照。如果在此之后发生任何故障，最好切换回这些快照，清理共享驱动器，然后重新开始网格安装。 [清理共享磁盘](https://oracle-base.com/articles/rac/clean-up-a-failed-grid-infrastructure-installation#asm_disks)的替代方法是现在使用zip，发生故障时只需更换它们。
 ```console
 $ # Linux
 $ cd /u04/VirtualBox/ol7-19c-rac
@@ -764,19 +764,19 @@ cd C:\VirtualBox\ol7-19c-rac
 zip PreGrid.zip *.vdi
 ```
 
-##  Install the Grid Infrastructure
+##  安装网格基础架构
 
-Make sure both virtual machines are started. The GI is now an image installation, so perform the following on the first node as the "oracle" user.
+确保两个虚拟机都已启动。GI现在是映像安装，因此请以“oracle”用户的身份在第一个节点上执行以下操作。
 ```console
 export SOFTWARE_LOCATION=/media/sf_19.0.0/
 cd /u01/app/19.0.0/grid
 unzip -q $SOFTWARE_LOCATION/linuxx64_1900_grid_home.zip
 ```
-or unzip the grid software to target directory on the first node. Don’t do this on the second node.
+或将网格软件解压缩到第一个节点上的目标目录。不要在第二个节点上执行此操作。
 ```console
 unzip -d /u01/app/19.0.0/grid V982068-01.zip
 ```
-Install the following package from the grid home as the "root" user on all nodes.
+在所有节点上以“root”用户身份从网格主目录安装以下软件包。
 ```console
 su -
 # Local node.
@@ -788,7 +788,7 @@ scp ./cvuqdisk* root@ol7-19c-rac2:/tmp
 ssh root@ol7-19c-rac2 rpm -Uvh /tmp/cvuqdisk*
 exit
 ```
-If you were planning on using the AFD Driver (the new ASMLib) you would configure the shared disks using the asmcmd command as shown below. We are using UDEV, so this is not necessary.
+如果您打算使用AFD驱动程序（新的ASMLib），则可以使用asmcmd命令配置共享磁盘，如下所示。 我们正在使用UDEV，因此没有必要。
 ```console
 # !!!! I did not do this! !!!!
 su -
@@ -814,58 +814,58 @@ unset ORACLE_BASE
 
 exit
 ```
-Configure the Grid Infrastructure by running the following as the "oracle" user.
+通过以“oracle”用户身份运行以下内容来配置Grid Infrastructure。
 
-I could have run the configuration in silent mode using this edited response file (grid_config.rsp) with the following command.
+我可以使用此编辑的响应文件（grid_config.rsp）通过以下命令以静默方式运行配置。
 ```console
 cd /u01/app/19.0.0/grid
 ./gridSetup.sh -silent -responseFile /tmp/grid_config.rsp
 ```
-Instead, here's the interactive configuration.
+相反，这是交互式配置。
 ```console
 cd /u01/app/19.0.0/grid
 ./gridSetup.sh
 ```
 ![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-184019@2x.jpg "Install the Grid Infrastructure")
-Select the "Configure Oracle Grid Infrastructure for a New Cluster" option, then click the "Next" button.
+选择“为新集群配置Oracle Grid Infrastructure”选项，然后单击“下一步”按钮。
 ![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-184049@2x.jpg "Install the Grid Infrastructure")
-Accept the "Configure an Oracle Standalone Cluster" option by clicking the "Next" button.
+通过单击“下一步”按钮接受“配置Oracle独立集群”选项。
 
-Enter the cluster name "ol7-19c-cluster", SCAN name "ol7-19c-scan" and SCAN port "1521", then click the "Next" button.
+输入群集名称“ol7-19c-cluster”，SCAN名称“ol7-19c-scan”和SCAN端口“1521”，然后单击“下一步”按钮。
 ![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-184214@2x.jpg "Install the Grid Infrastructure")
-On the "Cluster Node Information" screen, click the "Add" button.
+在“群集节点信息”屏幕上，单击“添加”按钮。
 ![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-184312@2x.jpg "Install the Grid Infrastructure")
-Click the "SSH Connectivity..." button and enter the password for the "oracle" user. Click the "Setup" button to configure SSH connectivity, and the "Test" button to test it once it is complete. Once the test is complete, click the "Next" button.
+单击“SSH连接...”按钮，然后输入“oracle”用户的密码。 单击“设置”按钮以配置SSH连接，单击“测试”按钮以对其进行测试。 测试完成后，单击“下一步”按钮。
 
-Check the public and private networks are specified correctly. Make sure enp0s9 are used for “ASM & Private”, If the NAT interface is displayed, remember to mark it as "Do Not Use". Click the "Next" button.
+检查公共和专用网络是否正确指定。 确保enp0s9用于“ASM和专用”，如果显示NAT接口，请记住将其标记为“请勿使用”。 点击“下一步”按钮。
 ![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-184917@2x.jpg "Install the Grid Infrastructure")
-Accept the "Use Oracle Flex ASM for storage" option by clicking the "Next" button.
+通过单击“下一步”按钮接受“使用Oracle Flex ASM进行存储”选项。
 ![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-184858@2x.jpg "Install the Grid Infrastructure")
-Select the "No" option, as we don't want to create a separate disk group for the GIMR in this case. Click the "Next" button.
+选择“否”选项，因为在这种情况下，我们不想为GIMR创建单独的磁盘组。 点击“下一步”按钮。
 
-Set the redundancy to "External", click the "Change Discovery Path" button and set the path to "/dev/oracleasm/*". Return to the main screen and select all 4 disks. Uncheck the "Configure Oracle ASM Filter Driver" option, then click the "Next" button.
+将冗余设置为“外部”，单击“更改发现路径”按钮，然后将路径设置为“/dev/oracleasm/*”。 返回主屏幕并选择所有4个磁盘。 取消选中“配置Oracle ASM筛选器驱动程序”选项，然后单击“下一步”按钮。
 ![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-185004@2x.jpg "Install the Grid Infrastructure")
-Enter the credentials and click the "Next" button.
+输入凭据，然后单击“下一步”按钮。
 ![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-185024@2x.jpg "Install the Grid Infrastructure")
-Accept the default IPMI option by clicking the "Next" button.
+通过单击“下一步”按钮接受默认IPMI选项。
 ![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-185035@2x.jpg "Install the Grid Infrastructure")
-Don't register with EM. Click the "Next" button.
+不要在EM注册。 点击“下一步”按钮。
 ![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-185045@2x.jpg "Install the Grid Infrastructure")
-We are using a single user and group manage both ASM add the database, so set the groups to "dba" and click the "Next" button. Accept the warnings on the subsequent dialog by clicking the "Yes" button.
+我们使用的是单个用户，并且组管理这两个ASM都添加了数据库，因此将组设置为“dba”并单击“下一步”按钮。 单击“是”按钮，接受后续对话框中的警告。
 ![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-185132@2x.jpg "Install the Grid Infrastructure")
-Enter the Oracle Base location "/u01/app/oracle" and click the "Next" button. We have already pre-created directories for the later database installation, so ignore the subsequent warning about the Oracle Base not being empty by clicking the "Yes" button.
+输入Oracle Base位置“/u01/app/oracle”，然后单击“下一步”按钮。 我们已经为以后的数据库安装预先创建了目录，因此通过单击“是”按钮忽略有关Oracle Base不为空的后续警告。
 ![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-185158@2x.jpg "Install the Grid Infrastructure")
-Accept the default inventory directory by clicking the "Next" button.
+通过单击“下一步”按钮接受默认清单目录。
 ![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-185518@2x.jpg "Install the Grid Infrastructure")
-Wait while the prerequisite checks complete. If you have any issues use the "Fix & Check Again" button. Once possible fixes are complete, check the "Ignore All" checkbox and click the "Next" button. It is likely the "Physical Memory" and "Network Time Protocol (NTP)" tests will fail for this type of installation. This is OK.
+等待先决条件检查完成。如果您有任何问题，请使用“修复并再次检查”按钮。 完成可能的修复后，选中“全部忽略”复选框，然后单击“下一步”按钮。对于这种类型的安装，“物理内存”和“网络时间协议（NTP）”测试可能会失败。这不影响后续安装过程。
 ![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-185737@2x.jpg "Install the Grid Infrastructure")
-By check “Ignore All” to proceed the installation.
+通过选中“全部忽略”以继续安装。
 
-Wait while the installation takes place.
+等待安装。
 ![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-190342@2x.jpg "Install the Grid Infrastructure")
-When prompted, run the configuration scripts on each node.
+出现提示时，请在每个节点上运行配置脚本。
 ![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-190914@2x.jpg "Install the Grid Infrastructure")
-The output from the "orainstRoot.sh" file should look something like that listed below.
+来自“orainstRoot.sh”文件的输出应类似于以下所列。
 ```console
 [root@ol7-19c-rac1 ~]# /u01/app/oraInventory/orainstRoot.sh 
 Changing permissions of /u01/app/oraInventory.
@@ -877,7 +877,7 @@ The execution of the script is complete.
 [root@ol7-19c-rac1 ~]#
 ```
 
-The output of the "root.sh" will vary a little depending on the node it is run on. Example output can be seen here.
+“root.sh”的输出将有所不同，具体取决于运行该节点的节点。示例输出可以在这里看到。
 ```console
 [root@ol7-19c-rac1 ~]# /u01/app/19.0.0/grid/root.sh
 Performing root user operation.
@@ -996,17 +996,17 @@ The log of current session can be found at:
 [root@ol7-19c-rac2 ~]#
 ```
 
-Once the scripts have completed, return to the "Execute Configuration Scripts" screen on "ol7-19c-rac1" and click the "OK" button.
+脚本执行完成后，返回“ol7-19c-rac1”上的“执行配置脚本”屏幕，然后单击“确定”按钮。
 
-Wait for the configuration assistants to complete.
+等待配置助手完成。
 ![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-193235@2x.jpg "Install the Grid Infrastructure")
-If any of the configuration steps fail you should check the specified log to see if the error is a show-stopper or not. 
+如果任何配置步骤失败，则应检查指定的日志，以查看错误是否为show-stopper。
 
-Provided you don't have any show-stoppers, it is safe to ignore the errors by clicking "Next" button.
+如果您没有任何显示停止符，则可以通过单击“下一步”按钮来忽略错误。
 ![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-193606@2x.jpg "Install the Grid Infrastructure")
-Click the "Close" button to exit the installer.
+单击“关闭”按钮退出安装程序。
 ![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-193620@2x.jpg "Install the Grid Infrastructure")
-The grid infrastructure installation is now complete. We can check the status of the installation using the following commands.
+网格基础结构安装现已完成。我们可以使用以下命令检查安装状态。
 ```console
 [root@ol7-19c-rac1 ~]# /u01/app/19.0.0/grid/bin/crsctl stat res -t
 --------------------------------------------------------------------------------
@@ -1061,7 +1061,7 @@ ora.scan1.vip
 [root@ol7-19c-rac1 ~]#
 ```
 
-At this point it is probably a good idea to shutdown both VMs and take snapshots. Remember to make a fresh zip of the ASM disks on the host machine, which you will need to restore if you revert to the post-grid snapshots.
+此时，最好关闭两个VM并进行快照。 切记要在主机上重新压缩ASM磁盘，如果恢复到网格后快照，则需要将其还原。
 ```console
 $ cd /u04/VirtualBox/ol7-19c-rac
 $ zip PostGrid.zip *.vdi
@@ -1080,148 +1080,4 @@ $ ./runInstaller
 ```
 Select the "Set Up Software Only" option, then click the "Next" button.
 ![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-194047@2x.jpg "Install the Database Software")
-Accept the "Oracle Real Application Clusters database installation" option by clicking the "Next" button.
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-194138@2x.jpg "Install the Database Software")
-Make sure both nodes are selected, then click the "Next" button.
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-194210@2x.jpg "Install the Database Software")
-Select the "Enterprise Edition" option, then click the "Next" button.
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-194630@2x.jpg "Install the Database Software")
-Enter "/u01/app/oracle" as the Oracle base, then click the "Next" button.
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-194639@2x.jpg "Install the Database Software")
-Select the desired operating system groups, then click the "Next" button. In this case we are only using the "dba" group.
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-194725@2x.jpg "Install the Database Software")
-Accept the default options, and click “Next” button.
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-194734@2x.jpg "Install the Database Software")
-Wait for the prerequisite check to complete. If there are any problems either click the "Fix & Check Again" button, or check the "Ignore All" checkbox and click the "Next" button.
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-195031@2x.jpg "Install the Database Software")
-
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-195100@2x.jpg "Install the Database Software")
-If you are happy with the summary information, click the "Install" button.
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-195114@2x.jpg "Install the Database Software")
-Wait while the installation takes place.
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-195943@2x.jpg "Install the Database Software")
-When prompted, run the configuration script on each node. When the scripts have been run on each node, click the "OK" button.
-
-Click the "Close" button to exit the installer.
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-200437@2x.jpg "Install the Database Software")
-Shutdown both VMs and take snapshots. Remember to make a fresh zip of the ASM disks on the host machine, which you will need to restore if you revert to the post-db snapshots.
-```console
-$ cd /u04/VirtualBox/ol7-19c-rac
-$ zip PostDB.zip *.vdi
-```
-
-## Create a Database
-Make sure the "ol7-19c-rac1" and "ol7-19c-rac2" virtual machines are started, then login to "ol7-19c-rac1" as the oracle user and start the Database Creation Asistant (DBCA).
-```console
-$ db_env
-$ dbca
-```
-Select the "Create Database" option and click the "Next" button.
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-200513@2x.jpg "Create a Database")
-Select the "Advanced Mode" option. Click the "Next" button.
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-200545@2x.jpg "Create a Database")
-Check the "Custom Database" option and click the "Next" button.
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-200603@2x.jpg "Create a Database")
-Make sure both nodes are selected, then click the "Next" button.
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-200615@2x.jpg "Create a Database")
-Enter the container database name (cdbrac), pluggable database name (pdb) and administrator password. Click the "Next" button.
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-200740@2x.jpg "Create a Database")
-Accept the default values, and click “Next” button.
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-200818@2x.jpg "Create a Database")
-Accept the default values, and click “Next” button.
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-200859@2x.jpg "Create a Database")
-Accept the default values, and click “Next” button.
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-200942@2x.jpg "Create a Database")
-Accept the default values, and click “Next” button.
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-201022@2x.jpg "Create a Database")
-
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-201044@2x.jpg "Create a Database")
-Deselect the CVU and EM options, and click “Next” button.
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-201119@2x.jpg "Create a Database")
-Enter dba password, and click “Next” button.
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-201137@2x.jpg "Create a Database")
-
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-201149@2x.jpg "Create a Database")
-
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-201216@2x.jpg "Create a Database")
-
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-201309@2x.jpg "Create a Database")
-Select “Ignore All”, and click “Next” button.
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-201424@2x.jpg "Create a Database")
-If you are happy with the summary information, click the "Finish" button.
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-201435@2x.jpg "Create a Database")
-Wait while the database creation takes place.
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-202201@2x.jpg "Create a Database")
-If you want to modify passwords, click the "Password Management" button. When finished, click the "Close" button.
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-233237@2x.jpg "Create a Database")
-The RAC database creation is now complete.
-
-## Check the Status of the RAC
-There are several ways to check the status of the RAC. The srvctl utility shows the current configuration and status of the RAC database.
-```console
-[oracle@ol7-19c-rac1 cdbrac]$ grid_env
-[oracle@ol7-19c-rac1 cdbrac]$ srvctl config database -d cdbrac
-Database unique name: cdbrac
-Database name: cdbrac
-Oracle home: /u01/app/oracle/product/19.0.0/db_1
-Oracle user: oracle
-Spfile: +DATA/CDBRAC/PARAMETERFILE/spfile.275.1024741213
-Password file: +DATA/CDBRAC/PASSWORD/pwdcdbrac.258.1024730137
-Domain: 
-Start options: open
-Stop options: immediate
-Database role: PRIMARY
-Management policy: AUTOMATIC
-Server pools: 
-Disk Groups: DATA
-Mount point paths: 
-Services: 
-Type: RAC
-Start concurrency: 
-Stop concurrency: 
-OSDBA group: dba
-OSOPER group: 
-Database instances: cdbrac1,cdbrac2
-Configured nodes: ol7-19c-rac1,ol7-19c-rac2
-CSS critical: no
-CPU count: 0
-Memory target: 0
-Maximum memory: 0
-Default network number for database services: 
-Database is administrator managed
-[oracle@ol7-19c-rac1 cdbrac]$ srvctl status database -d cdbrac
-Instance cdbrac1 is running on node ol7-19c-rac1
-Instance cdbrac2 is running on node ol7-19c-rac2
-[oracle@ol7-19c-rac1 cdbrac]$
-```
-The V$ACTIVE_INSTANCES view can also display the current status of the instances.
-```console
-[oracle@ol7-19c-rac1 cdbrac]$ sqlplus / as sysdba
-
-SQL*Plus: Release 19.0.0.0.0 - Production on Tue Nov 19 10:34:25 2019
-Version 19.3.0.0.0
-
-Copyright (c) 1982, 2019, Oracle.  All rights reserved.
-
-
-Connected to:
-Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
-Version 19.3.0.0.0
-
-SQL> SELECT inst_name FROM v$active_instances;
-
-INST_NAME
---------------------------------------------------------------------------------
-ol7-19c-rac1:cdbrac1
-ol7-19c-rac2:cdbrac2
-
-SQL>
-```
-
-## Reference
-For more information see:
-- [Grid Infrastructure Installation and Upgrade Guide for Linux](https://docs.oracle.com/en/database/oracle/oracle-database/19/cwlin/index.html)  
-- [Database Installation Guide for Linux](https://docs.oracle.com/en/database/oracle/oracle-database/19/ladbi/index.html)
-- [Oracle Database 12c Release 2 (12.2) RAC On Oracle Linux 7 Using VirtualBox](https://oracle-base.com/articles/12c/oracle-db-12cr2-rac-installation-on-oracle-linux-7-using-virtualbox)
-
-### End
+Accept the "Oracle Real Application 
