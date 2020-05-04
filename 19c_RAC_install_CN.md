@@ -448,14 +448,14 @@ uid=54321(oracle) gid=54321(oinstall) groups=54321(oinstall),54322(dba),54323(vb
 ```
 在虚拟机上创建一个共享文件夹（设备>共享文件夹），指向主机上解压缩Oracle软件的目录。 在单击“确定”按钮之前，请检查“自动安装”和“永久”选项。
 
-需要重新启动VM，才能正确使用来宾添加。 下一部分需要关闭，因此此时无需其他重新启动。 VM重新启动后，“oracle”用户将可以访问名为“/run//media/sf_19.0.0”的共享文件夹。
+需要重新启动VM，才能正确使用来宾添加。 下一部分需要关闭，因此此时无需其他重新启动。 VM重新启动后，“oracle”用户将可以访问名为“/run/media/sf_19.0.0”的共享文件夹。
 ## 创建共享磁盘
 
 使用以下命令关闭“ol7-19c-rac1”虚拟机。
 ```console
 # shutdown -h now
 ```
-On the host server, create 4 sharable virtual disks and associate them as virtual media using the following commands. You can pick a different location, but make sure they are outside the existing VM directory.
+在主机服务器上，创建4个可共享虚拟磁盘，并使用以下命令将它们关联为虚拟介质。 您可以选择其他位置，但请确保它们在现有VM目录之外。
 ```console
 $ mkdir -p /u04/VirtualBox/ol7-19c-rac
 $ cd /u04/VirtualBox/ol7-19c-rac
@@ -483,7 +483,7 @@ $ VBoxManage modifyhd asm3.vdi --type shareable
 $ VBoxManage modifyhd asm4.vdi --type shareable
 
 ```
-If you are using a Windows host, you will have to modify the paths, but the process is the same.
+如果使用Windows主机，则必须修改路径，但是过程相同。
 ```console
 C:
 mkdir C:\VirtualBox\ol7-19c-rac
@@ -504,14 +504,14 @@ cd C:\VirtualBox\ol7-19c-rac
 "c:\Program Files\Oracle\VirtualBox\VBoxManage" modifyhd asm3.vdi --type shareable
 "c:\Program Files\Oracle\VirtualBox\VBoxManage" modifyhd asm4.vdi --type shareable
 ```
-Start the "ol7-19c-rac1" virtual machine by clicking the "Start" button on the toolbar. When the server has started, log in as the root user so you can configure the shared disks. The current disks can be seen by issuing the following commands.
+通过单击工具栏上的“开始”按钮来启动“ol7-19c-rac1”虚拟机。 服务器启动后，以root用户身份登录，以便您可以配置共享磁盘。 发出以下命令可以看到当前磁盘。
 ```console
 # cd /dev
 # ls sd*
 sda  sda1  sda2  sdb  sdc  sdd  sde
 #
 ```
-Use the "fdisk" command to partition the disks sdb to sde. The following output shows the expected fdisk output for the sdb disk.
+使用“fdisk”命令将磁盘sdb分区到sde。 以下输出显示了sdb磁盘的预期fdisk输出。
 ```console
 # fdisk /dev/sdb
 Welcome to fdisk (util-linux 2.23.2).
@@ -541,20 +541,20 @@ Calling ioctl() to re-read partition table.
 Syncing disks.
 #
 ```
-In each case, the sequence of answers is "n", "p", "1", "Return", "Return" and "w".
-Once all the disks are partitioned, the results can be seen by repeating the previous "ls" command.
+在每种情况下，答案的顺序为“n”，“p”，“1”，“回车”，“回车”和“w”。
+对所有磁盘进行分区后，可以通过重复前面的“ls”命令来查看结果。
 ```console
 # cd /dev
 # ls sd*
 sda  sda1  sda2  sdb  sdb1  sdc  sdc1  sdd  sdd1  sde  sde1
 #
 ```
-Configure your UDEV rules, as shown [here](https://oracle-base.com/articles/linux/udev-scsi-rules-configuration-in-oracle-linux).
-Add the following to the "/etc/scsi_id.config" file to configure SCSI devices as trusted. Create the file if it doesn't already exist.
+配置您的UDEV规则，如[此处](https://oracle-base.com/articles/linux/udev-scsi-rules-configuration-in-oracle-linux)所示。
+将以下内容添加到“/etc/scsi_id.config”文件中，以将SCSI设备配置为受信任。 创建文件（如果尚不存在）。
 ```console
 options=-g
 ```
-The SCSI ID of my disks are displayed below.
+我的磁盘的SCSI ID显示在下面。
 ```console
 # /usr/lib/udev/scsi_id -g -u -d /dev/sdb1
 1ATA_VBOX_HARDDISK_VB189c7a69-689f61b0
@@ -566,29 +566,29 @@ The SCSI ID of my disks are displayed below.
 1ATA_VBOX_HARDDISK_VBf00747dc-10252f06
 #
 ```
-Using these values, edit the "/etc/udev/rules.d/99-oracle-asmdevices.rules" file adding the following 4 entries. All parameters for a single entry must be on the same line.
+使用这些值，编辑“/etc/udev/rules.d/99-oracle-asmdevices.rules”文件，并添加以下4个条目。 单个条目的所有参数必须在同一行上。
 ```console
 KERNEL=="sd?1", SUBSYSTEM=="block", PROGRAM=="/usr/lib/udev/scsi_id -g -u -d /dev/$parent", RESULT=="1ATA_VBOX_HARDDISK_VB189c7a69-689f61b0", SYMLINK+="oracleasm/asm-disk1", OWNER="oracle", GROUP="dba", MODE="0660"
 KERNEL=="sd?1", SUBSYSTEM=="block", PROGRAM=="/usr/lib/udev/scsi_id -g -u -d /dev/$parent", RESULT=="1ATA_VBOX_HARDDISK_VBc4ae174e-fc756d12", SYMLINK+="oracleasm/asm-disk2", OWNER="oracle", GROUP="dba", MODE="0660"
 KERNEL=="sd?1", SUBSYSTEM=="block", PROGRAM=="/usr/lib/udev/scsi_id -g -u -d /dev/$parent", RESULT=="1ATA_VBOX_HARDDISK_VBa4e03079-ae751cbd", SYMLINK+="oracleasm/asm-disk3", OWNER="oracle", GROUP="dba", MODE="0660"
 KERNEL=="sd?1", SUBSYSTEM=="block", PROGRAM=="/usr/lib/udev/scsi_id -g -u -d /dev/$parent", RESULT=="1ATA_VBOX_HARDDISK_VBf00747dc-10252f06", SYMLINK+="oracleasm/asm-disk4", OWNER="oracle", GROUP="dba", MODE="0660"
 ```
-Load updated block device partition tables.
+加载更新的块设备分区表。
 ```console
 # /sbin/partprobe /dev/sdb1
 # /sbin/partprobe /dev/sdc1
 # /sbin/partprobe /dev/sdd1
 # /sbin/partprobe /dev/sde1
 ```
-Test the rules are working as expected.
+测试规则是否按预期工作。
 ```console
 # /sbin/udevadm test /block/sdb/sdb1
 ```
-Reload the UDEV rules and start UDEV.
+重新加载UDEV规则并启动UDEV。
 ```console
 # /sbin/udevadm control --reload-rules
 ```
-The disks should now be visible and have the correct ownership using the following command. If they are not visible, your UDEV configuration is incorrect and must be fixed before you proceed.
+现在，磁盘应该可见，并使用以下命令具有正确的所有权。 如果看不到它们，则说明您的UDEV配置不正确，必须先进行修复，然后再继续。
 ```console
 # ls -al /dev/oracleasm/*
 lrwxrwxrwx. 1 root root 7 Mar  6 17:41 /dev/oracleasm/asm-disk1 -> ../sdb1
@@ -597,7 +597,7 @@ lrwxrwxrwx. 1 root root 7 Mar  6 17:41 /dev/oracleasm/asm-disk3 -> ../sdd1
 lrwxrwxrwx. 1 root root 7 Mar  6 17:41 /dev/oracleasm/asm-disk4 -> ../sde1
 #
 ```
-The symbolic links are owned by root, but the devices they point to now have the correct ownership.
+符号链接由root拥有，但是它们指向的设备现在具有正确的所有权。
 ```console
 # ls -al /dev/sd*1
 brw-rw----. 1 root   disk 8,  1 Apr 25 14:11 /dev/sda1
@@ -607,9 +607,9 @@ brw-rw----. 1 oracle dba  8, 49 Apr 25 14:11 /dev/sdd1
 brw-rw----. 1 oracle dba  8, 65 Apr 25 14:11 /dev/sde1
 #
 ```
-The shared disks are now configured for the grid infrastructure.
+现在，已为网格基础结构配置了共享磁盘。
 
-## Clone the Virtual Machine
+## 克隆虚拟机
 Later versions of VirtualBox allow you to clone VMs, but these also attempt to clone the shared disks, which is not what we want. Instead we must manually clone the VM.
 Shut down the "ol7-19c-rac1" virtual machine using the following command.
 ```console
