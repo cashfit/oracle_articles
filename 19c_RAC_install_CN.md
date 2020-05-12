@@ -10,7 +10,7 @@
 
 使用VirtualBox，您可以在一台服务器上运行多个虚拟机（VM），从而使您可以在一台计算机上运行两个RAC节点。此外，它还允许您设置共享虚拟磁盘，从而克服了昂贵的共享存储的障碍。
 
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/19c_arch_Diagram.png "Introduction")
+![19c_RAC_install](./19c_RAC_install/19c_arch_Diagram.png "Introduction")
 
 
 在开始进行此安装之前，请考虑以下几点。
@@ -50,47 +50,47 @@
 - 从菜单中启动VirtualBox。
 - 选择“工具”选项。
 - 在弹出菜单中单击“网络”。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-113524@2x.jpg "VirtualBox Network Setup")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-113524@2x.jpg "VirtualBox Network Setup")
 - 点击屏幕右侧尺寸上的“创建”按钮。将创建一个名为“vboxnet0”的网络。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-113536@2x.jpg "VirtualBox Network Setup")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-113536@2x.jpg "VirtualBox Network Setup")
 - 如果您要为公共地址使用其他子网，则可以在此处更改网络详细信息。只要确保您选择的子网与网络上的任何实际子网都不匹配即可。我决定使用默认值，对我来说是“192.168.56.X”。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-113559@2x.jpg "VirtualBox Network Setup")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-113559@2x.jpg "VirtualBox Network Setup")
 
 ## 虚拟机设置
 
 现在，我们必须定义两个虚拟RAC节点。 我们可以通过定义一个VM，然后在安装它时将其克隆来节省时间。
 
 启动VirtualBox并单击工具栏上的“新建”按钮。输入名称“ol7-19c-rac1”，操作系统“Linux”和版本“Oracle（64位）”，然后单击“继续”按钮。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-112613@2x.jpg "Virtual Machine Setup")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-112613@2x.jpg "Virtual Machine Setup")
 输入“ 4096”作为基本内存大小，然后单击“继续”按钮。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-112838@2x.jpg "Virtual Machine Setup")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-112838@2x.jpg "Virtual Machine Setup")
 通过单击“创建”按钮，接受默认选项以创建新的虚拟硬盘。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-112911@2x.jpg "Virtual Machine Setup")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-112911@2x.jpg "Virtual Machine Setup")
 通过单击“继续”按钮接受默认的硬盘驱动器文件类型。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-112924@2x.jpg "Virtual Machine Setup")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-112924@2x.jpg "Virtual Machine Setup")
 通过单击“继续”按钮接受“动态分配”选项。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-112939@2x.jpg "Virtual Machine Setup")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-112939@2x.jpg "Virtual Machine Setup")
 接受默认位置并将大小设置为“50G”，然后单击“创建”按钮。如果可以将虚拟磁盘分散到不同的物理磁盘上，则可以提高性能。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-113049@2x.jpg "Virtual Machine Setup")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-113049@2x.jpg "Virtual Machine Setup")
 “ol7-19c-rac1” VM将出现在左侧窗格中。向下滚动右侧的详细信息，然后单击“网络”链接。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-113536@2x.jpg "Virtual Machine Setup")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-113536@2x.jpg "Virtual Machine Setup")
 确保启用了“适配器1”，将其设置为“NAT”，然后单击“适配器2”选项卡。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-113617@2x.jpg "Virtual Machine Setup")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-113617@2x.jpg "Virtual Machine Setup")
 确保启用了“适配器2”，将其设置为“仅主机适配器”，然后单击“适配器3”选项卡。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-113639@2x.jpg "Virtual Machine Setup")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-113639@2x.jpg "Virtual Machine Setup")
 确保启用了“适配器3”，将其设置为“内部网络”，然后单击“系统”部分。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-113708@2x.jpg "Virtual Machine Setup")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-113708@2x.jpg "Virtual Machine Setup")
 将“硬盘”移至启动顺序的顶部，然后取消选中“软盘”选项，然后单击“确定”按钮。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-113747@2x.jpg "Virtual Machine Setup")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-113747@2x.jpg "Virtual Machine Setup")
 现在已配置了虚拟机，因此我们可以开始客户机操作系统安装。
 
 ## 虚拟机操作系统安装
 在突出显示新VM的情况下，单击工具栏上的“开始”按钮。在“选择启动磁盘”屏幕上，选择相关的Oracle Linux ISO映像，然后单击“启动”按钮。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-113838@2x.jpg "Guest Operating System Installation")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-113838@2x.jpg "Guest Operating System Installation")
 出现的控制台窗口将包含Oracle Linux引导屏幕。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-113956@2x.jpg "Guest Operating System Installation")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-113956@2x.jpg "Guest Operating System Installation")
 
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-114118@2x.jpg "Guest Operating System Installation")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-114118@2x.jpg "Guest Operating System Installation")
 像安装基本服务器一样，继续安装Oracle Linux 7。可以在此处找到安装的一般图片指南。更具体地说，应该是至少安装4G +交换分区，禁用防火墙，将SELinux设置为宽松并安装以下软件包组的服务器安装：
 - 带有GUI的服务器
 - 硬件监控实用程序
@@ -826,45 +826,45 @@ cd /u01/app/19.0.0/grid
 cd /u01/app/19.0.0/grid
 ./gridSetup.sh
 ```
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-184019@2x.jpg "Install the Grid Infrastructure")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-184019@2x.jpg "Install the Grid Infrastructure")
 选择“为新集群配置Oracle Grid Infrastructure”选项，然后单击“下一步”按钮。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-184049@2x.jpg "Install the Grid Infrastructure")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-184049@2x.jpg "Install the Grid Infrastructure")
 通过单击“下一步”按钮接受“配置Oracle独立集群”选项。
 
 输入群集名称“ol7-19c-cluster”，SCAN名称“ol7-19c-scan”和SCAN端口“1521”，然后单击“下一步”按钮。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-184214@2x.jpg "Install the Grid Infrastructure")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-184214@2x.jpg "Install the Grid Infrastructure")
 在“群集节点信息”屏幕上，单击“添加”按钮。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-184312@2x.jpg "Install the Grid Infrastructure")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-184312@2x.jpg "Install the Grid Infrastructure")
 单击“SSH连接...”按钮，然后输入“oracle”用户的密码。 单击“设置”按钮以配置SSH连接，单击“测试”按钮以对其进行测试。 测试完成后，单击“下一步”按钮。
 
 检查公共和专用网络是否正确指定。 确保enp0s9用于“ASM和专用”，如果显示NAT接口，请记住将其标记为“请勿使用”。 点击“下一步”按钮。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-184917@2x.jpg "Install the Grid Infrastructure")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-184917@2x.jpg "Install the Grid Infrastructure")
 通过单击“下一步”按钮接受“使用Oracle Flex ASM进行存储”选项。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-184858@2x.jpg "Install the Grid Infrastructure")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-184858@2x.jpg "Install the Grid Infrastructure")
 选择“否”选项，因为在这种情况下，我们不想为GIMR创建单独的磁盘组。 点击“下一步”按钮。
 
 将冗余设置为“外部”，单击“更改发现路径”按钮，然后将路径设置为“/dev/oracleasm/*”。 返回主屏幕并选择所有4个磁盘。 取消选中“配置Oracle ASM筛选器驱动程序”选项，然后单击“下一步”按钮。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-185004@2x.jpg "Install the Grid Infrastructure")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-185004@2x.jpg "Install the Grid Infrastructure")
 输入凭据，然后单击“下一步”按钮。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-185024@2x.jpg "Install the Grid Infrastructure")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-185024@2x.jpg "Install the Grid Infrastructure")
 通过单击“下一步”按钮接受默认IPMI选项。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-185035@2x.jpg "Install the Grid Infrastructure")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-185035@2x.jpg "Install the Grid Infrastructure")
 不要在EM注册。 点击“下一步”按钮。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-185045@2x.jpg "Install the Grid Infrastructure")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-185045@2x.jpg "Install the Grid Infrastructure")
 我们使用的是单个用户，并且组管理这两个ASM都添加了数据库，因此将组设置为“dba”并单击“下一步”按钮。 单击“是”按钮，接受后续对话框中的警告。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-185132@2x.jpg "Install the Grid Infrastructure")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-185132@2x.jpg "Install the Grid Infrastructure")
 输入Oracle Base位置“/u01/app/oracle”，然后单击“下一步”按钮。 我们已经为以后的数据库安装预先创建了目录，因此通过单击“是”按钮忽略有关Oracle Base不为空的后续警告。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-185158@2x.jpg "Install the Grid Infrastructure")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-185158@2x.jpg "Install the Grid Infrastructure")
 通过单击“下一步”按钮接受默认清单目录。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-185518@2x.jpg "Install the Grid Infrastructure")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-185518@2x.jpg "Install the Grid Infrastructure")
 等待先决条件检查完成。如果您有任何问题，请使用“修复并再次检查”按钮。 完成可能的修复后，选中“全部忽略”复选框，然后单击“下一步”按钮。对于这种类型的安装，“物理内存”和“网络时间协议（NTP）”测试可能会失败。这不影响后续安装过程。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-185737@2x.jpg "Install the Grid Infrastructure")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-185737@2x.jpg "Install the Grid Infrastructure")
 通过选中“全部忽略”以继续安装。
 
 等待安装。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-190342@2x.jpg "Install the Grid Infrastructure")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-190342@2x.jpg "Install the Grid Infrastructure")
 出现提示时，请在每个节点上运行配置脚本。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-190914@2x.jpg "Install the Grid Infrastructure")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-190914@2x.jpg "Install the Grid Infrastructure")
 来自“orainstRoot.sh”文件的输出应类似于以下所列。
 ```console
 [root@ol7-19c-rac1 ~]# /u01/app/oraInventory/orainstRoot.sh 
@@ -999,13 +999,13 @@ The log of current session can be found at:
 脚本执行完成后，返回“ol7-19c-rac1”上的“执行配置脚本”屏幕，然后单击“确定”按钮。
 
 等待配置助手完成。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-193235@2x.jpg "Install the Grid Infrastructure")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-193235@2x.jpg "Install the Grid Infrastructure")
 如果任何配置步骤失败，则应检查指定的日志，以查看错误是否为show-stopper。
 
 如果您没有任何显示停止符，则可以通过单击“下一步”按钮来忽略错误。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-193606@2x.jpg "Install the Grid Infrastructure")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-193606@2x.jpg "Install the Grid Infrastructure")
 单击“关闭”按钮退出安装程序。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-193620@2x.jpg "Install the Grid Infrastructure")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-193620@2x.jpg "Install the Grid Infrastructure")
 网格基础结构安装现已完成。我们可以使用以下命令检查安装状态。
 ```console
 [root@ol7-19c-rac1 ~]# /u01/app/19.0.0/grid/bin/crsctl stat res -t
@@ -1079,31 +1079,31 @@ $ cd $ORACLE_HOME
 $ ./runInstaller
 ```
 选择“仅设置软件”选项，然后单击“下一步”按钮。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-194047@2x.jpg "Install the Database Software")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-194047@2x.jpg "Install the Database Software")
 通过单击“下一步”按钮接受“Oracle Real Application Clusters数据库安装”选项。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-194138@2x.jpg "Install the Database Software")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-194138@2x.jpg "Install the Database Software")
 确保两个节点都被选中，然后单击“下一步”按钮。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-194210@2x.jpg "Install the Database Software")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-194210@2x.jpg "Install the Database Software")
 选择“企业版”选项，然后单击“下一步”按钮。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-194630@2x.jpg "Install the Database Software")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-194630@2x.jpg "Install the Database Software")
 输入“/u01/app/oracle”作为Oracle base，然后单击“下一步”按钮。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-194639@2x.jpg "Install the Database Software")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-194639@2x.jpg "Install the Database Software")
 选择所需的操作系统组，然后单击“下一步”按钮。 在这种情况下，我们仅使用“dba”组。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-194725@2x.jpg "Install the Database Software")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-194725@2x.jpg "Install the Database Software")
 接受默认选项，然后单击“下一步”按钮。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-194734@2x.jpg "Install the Database Software")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-194734@2x.jpg "Install the Database Software")
 等待先决条件检查完成。 如果有任何问题，请单击“修复并再次检查”按钮，或选中“全部忽略”复选框，然后单击“下一步”按钮。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-195031@2x.jpg "Install the Database Software")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-195031@2x.jpg "Install the Database Software")
 
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-195100@2x.jpg "Install the Database Software")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-195100@2x.jpg "Install the Database Software")
 如果您对摘要信息感到满意，请单击“安装”按钮。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-195114@2x.jpg "Install the Database Software")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-195114@2x.jpg "Install the Database Software")
 等待安装。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-195943@2x.jpg "Install the Database Software")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-195943@2x.jpg "Install the Database Software")
 出现提示时，请在每个节点上运行配置脚本。 在每个节点上运行脚本后，单击“确定”按钮。
 
 单击“关闭”按钮退出安装程序。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-200437@2x.jpg "Install the Database Software")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-200437@2x.jpg "Install the Database Software")
 关闭两个VM并拍摄快照。 切记在主机上重新压缩ASM磁盘，如果还原到数据库后快照，则需要恢复该压缩。
 ```console
 $ cd /u04/VirtualBox/ol7-19c-rac
@@ -1117,43 +1117,43 @@ $ db_env
 $ dbca
 ```
 选择“创建数据库”选项，然后单击“下一步”按钮。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-200513@2x.jpg "Create a Database")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-200513@2x.jpg "Create a Database")
 选择“高级模式”选项。 点击“下一步”按钮。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-200545@2x.jpg "Create a Database")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-200545@2x.jpg "Create a Database")
 检查“自定义数据库”选项，然后单击“下一步”按钮。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-200603@2x.jpg "Create a Database")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-200603@2x.jpg "Create a Database")
 确保两个节点都被选中，然后单击“下一步”按钮。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-200615@2x.jpg "Create a Database")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-200615@2x.jpg "Create a Database")
 输入容器数据库名称（cdbrac），可插入数据库名称（pdb）和管理员密码。 点击“下一步”按钮。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-200740@2x.jpg "Create a Database")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-200740@2x.jpg "Create a Database")
 接受默认值，然后单击“下一步”按钮。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-200818@2x.jpg "Create a Database")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-200818@2x.jpg "Create a Database")
 接受默认值，然后单击“下一步”按钮。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-200859@2x.jpg "Create a Database")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-200859@2x.jpg "Create a Database")
 接受默认值，然后单击“下一步”按钮。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-200942@2x.jpg "Create a Database")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-200942@2x.jpg "Create a Database")
 接受默认值，然后单击“下一步”按钮。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-201022@2x.jpg "Create a Database")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-201022@2x.jpg "Create a Database")
 
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-201044@2x.jpg "Create a Database")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-201044@2x.jpg "Create a Database")
 取消选择CVU和EM选项，然后单击“下一步”按钮。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-201119@2x.jpg "Create a Database")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-201119@2x.jpg "Create a Database")
 输入dba密码，然后单击“下一步”按钮。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-201137@2x.jpg "Create a Database")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-201137@2x.jpg "Create a Database")
 
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-201149@2x.jpg "Create a Database")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-201149@2x.jpg "Create a Database")
 
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-201216@2x.jpg "Create a Database")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-201216@2x.jpg "Create a Database")
 
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-201309@2x.jpg "Create a Database")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-201309@2x.jpg "Create a Database")
 选择“全部忽略”，然后单击“下一步”按钮。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-201424@2x.jpg "Create a Database")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-201424@2x.jpg "Create a Database")
 如果您对摘要信息感到满意，请单击“完成”按钮。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-201435@2x.jpg "Create a Database")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-201435@2x.jpg "Create a Database")
 等待数据库创建完成。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-202201@2x.jpg "Create a Database")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-202201@2x.jpg "Create a Database")
 如果要修改密码，请单击“密码管理”按钮。 完成后，单击“关闭”按钮。
-![19c_RAC_install](http://github.com/cashfit/oracle_articles/raw/master/19c_RAC_install/Jietu20191119-233237@2x.jpg "Create a Database")
+![19c_RAC_install](./19c_RAC_install/Jietu20191119-233237@2x.jpg "Create a Database")
 RAC数据库创建现已完成。
 
 ## 检查RAC的状态
