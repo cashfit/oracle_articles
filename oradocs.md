@@ -7,14 +7,13 @@
 [Oracle Database, 11g Release 2 (11.2)](https://docs.oracle.com/cd/E11882_01/index.htm){:target="_blank"}  
 [Oracle Database, 11g Release 1 (11.1)](https://docs.oracle.com/cd/B28359_01/index.htm){:target="_blank"}  
 [Oracle Database 10g Release 2 (10.2)](https://docs.oracle.com/cd/B19306_01/nav/portal_1.htm){:target="_blank"}  
-[Oracle Database 10g Release 1](http://www.oracle.com/technetwork/database/database10g/documentation/database10g-096307.html){:target="_blank"}  
-[Oracle9i Release 2 (9.2)](http://www.oracle.com/technetwork/documentation/oracle9i-090271.html){:target="_blank"}  
-[Oracle9i Release 1 (9.0.1)](http://www.oracle.com/technetwork/documentation/oracle9i-arch-901-096298.html){:target="_blank"}  
-[Oracle8i Release 8.1.7](http://www.oracle.com/technetwork/documentation/oracle8i-085806.html){:target="_blank"}  
-[Oracle8i Release 8.1.6](http://www.oracle.com/technetwork/documentation/oracle8i-arch-816-101029.html){:target="_blank"}  
-[Oracle8i Release 8.1.5](http://www.oracle.com/technetwork/documentation/oracle8i-arch-815-089495.html){:target="_blank"}  
-[Oracle8 Release 8.0.6](http://www.oracle.com/technetwork/documentation/oracle8-090636.html){:target="_blank"}  
-[Oracle8 Release 8.0.5](http://www.oracle.com/technetwork/documentation/oracle8-arch-805-082159.html){:target="_blank"}  
-[Oracle8 Release 8.0.4](http://www.oracle.com/technetwork/documentation/oracle8-arch-804-083043.html){:target="_blank"}  
-[Oracle7 Release 7.3.4](http://www.oracle.com/technetwork/documentation/oracle7-091910.html){:target="_blank"}  
+[Oracle Database 10g Release 1](https://www.oracle.com/database/technologies/database10g-doc.html){:target="_blank"}  
+[Oracle9i Release 2 (9.2)](https://www.oracle.com/database/technologies/oracle9i.html){:target="_blank"}  
+[Oracle9i Release 1 (9.0.1)](https://www.oracle.com/database/technologies/oracle9i-arch-901.html){:target="_blank"}  
+[Oracle8i Release 8.1.7](https://www.oracle.com/database/technologies/oracle8i.html){:target="_blank"}  
+[Oracle8i Release 8.1.6](https://www.oracle.com/database/technologies/oracle8i-arch-816.html){:target="_blank"}  
+[Oracle8 Release 8.0.6](https://www.oracle.com/database/technologies/oracle8.html){:target="_blank"}   
+[Oracle7 Release 7.3.4](https://www.oracle.com/servers/technologies/oracle7.html){:target="_blank"}  
 
+
+(c) 2015, 2020, 2022 cashfit
