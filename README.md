@@ -6,8 +6,8 @@
 
 [使用VirtualBox在Oracle Linux 7上安装Oracle Database 19c RAC](https://cashfit.github.io/oracle_articles/19c_RAC_install_CN.html){:target="_blank"}
 
-[Oracle Database Documents 7.3 - 21c](https://cashfit.github.io/oracle_articles/oradocs.html){:target="_blank"}
+[Oracle Database Documents 7.3 - 23c](https://cashfit.github.io/oracle_articles/oradocs.html){:target="_blank"}
 
 
-(c) 2015, 2020, 2022 cashfit
+(c) 2015, 2020, 2024 cashfit
 
