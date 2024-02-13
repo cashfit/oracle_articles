@@ -30,6 +30,8 @@ Download the following software.
 - [Oracle Linux 9](https://yum.oracle.com/oracle-linux-isos.html) (Use the latest spin eg. 9.3)
 - [VirtualBox (7.0.12)](http://www.virtualbox.org/wiki/Downloads)
 - [Oracle 19c (19.3) Software (64 bit)](https://www.oracle.com/database/technologies/oracle19c-linux-downloads.html)
+- Oracle 19c 19.22 RU from MOS
+- OPatch latest version from MOS
 
 This article has been updated for the 19c release and Oracle Linux 9 combination, but the installation is essentially unchanged since 12.2.0.1. Any variations specific for 19c and OL9 will be highlight.
 
@@ -49,13 +51,12 @@ The package name will vary depending on the host distribution you are using. Onc
 We need to make sure a host-only network is configured and check/modify the IP range for that network. This will be the public network for our RAC installation.
 
 - Start VirtualBox from the menu.
-- Select the "Tools" option.
-- Click "Network" in the pop out menu.
-![19c_RAC_install](./19c_RAC_install/Jietu20191119-113524@2x.jpg "VirtualBox Network Setup")
-- Click the "Create" button on the right size of the screen. A network called "vboxnet0" will be created.
-![19c_RAC_install](./19c_RAC_install/Jietu20191119-113536@2x.jpg "VirtualBox Network Setup")
-- If you want to use a different subnet for your public addresses you can change the network details here. Just make sure the subnet you choose doesn't match any real subnets on your network. I've decided to stick with the default, which for me is "192.168.56.X".
-![19c_RAC_install](./19c_RAC_install/Jietu20191119-113559@2x.jpg "VirtualBox Network Setup")
+![19c_RAC_install](./19c_RAC_install_OL9/Screen Shot 2024-02-13 at 22.45.38.png "VirtualBox Startup")
+- Select the "Tools" option, click "Network" in the pop out menu.
+![19c_RAC_install](./19c_RAC_install_OL9/Screen Shot 2024-02-13 at 22.52.18.png "VirtualBox Network Setup")
+- Click the "Create" button on the right size of the screen. A network called "HostNetwork" will be created.
+If you want to use a different subnet for your public addresses you can change the network details here. Just make sure the subnet you choose doesn't match any real subnets on your network. I've decided to stick with the default, which for me is "192.168.56.X".
+![19c_RAC_install](./19c_RAC_install_OL9/Screen Shot 2024-02-13 at 22.54.51.png "VirtualBox Network Setup")
 
 ## Virtual Machine Setup
 
