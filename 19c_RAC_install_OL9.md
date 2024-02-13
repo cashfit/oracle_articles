@@ -73,37 +73,40 @@ By clicking "Finish" button will complete the wizard of create a new virtual mac
 ![19c_RAC_install](<./19c_RAC_install_OL9/Screen Shot 2024-02-13 at 22.58.40.png> "Virtual Machine Setup")
 The "ol9-19c-rac1" VM will appear on the left hand pane. Click on the "Settings" on the right side.
 ![19c_RAC_install](<./19c_RAC_install_OL9/Screen Shot 2024-02-13 at 22.58.51.png> "Virtual Machine Setup")
-Select "Network" tab, and make sure "Adapter 1" is enabled, set to "NAT", then click on the "Adapter 2" tab.
+Select "Network" section, and make sure "Adapter 1" is enabled, set to "NAT", then click on the "Adapter 2" tab.
 ![19c_RAC_install](<./19c_RAC_install_OL9/Screen Shot 2024-02-13 at 22.59.26.png> "Virtual Machine Setup")
 Make sure "Adapter 2" is enabled, set to "Host-only Network", then click on the "Adapter 3" tab.
 ![19c_RAC_install](<./19c_RAC_install_OL9/Screen Shot 2024-02-13 at 22.59.48.png> "Virtual Machine Setup")
 Make sure "Adapter 3" is enabled, set to "Internal Network", then click on the "System" section.
 ![19c_RAC_install](<./19c_RAC_install_OL9/Screen Shot 2024-02-13 at 23.00.07.png> "Virtual Machine Setup")
-On "System" tab, move "Hard Disk" to the top of the boot order and uncheck the "Floppy" option, then click the "OK" button.
+On "System" section, move "Hard Disk" to the top of the boot order and uncheck the "Floppy" option, then click the "OK" button.
 ![19c_RAC_install](<./19c_RAC_install_OL9/Screen Shot 2024-02-13 at 23.00.51.png> "Virtual Machine Setup")
 The virtual machine is now configured so we can start the guest operating system installation.
 ![19c_RAC_install](<./19c_RAC_install_OL9/Screen Shot 2024-02-13 at 23.01.20.png> "Virtual Machine Setup")
 
 ## Guest Operating System Installation
 With the new VM highlighted, click the "Start" button on the toolbar. 
-![19c_RAC_install](<./19c_RAC_install_OL9/Screen Shot 2024-02-13 at 23.01.43.png> "Guest Operating System Installation")
+![19c_RAC_install](<./19c_RAC_install_OL9/Screen Shot 2024-02-13 at 23.01.20.png> "Guest Operating System Installation")
 On the "Select start-up disk" screen,
 ![19c_RAC_install](<./19c_RAC_install_OL9/Screen Shot 2024-02-13 at 23.01.43.png> "Guest Operating System Installation")
-Choose the relevant Oracle Linux ISO image and click the "Start" button.
+Choose the relevant Oracle Linux ISO image and click the "Mount and Retry Boot" button.
 ![19c_RAC_install](<./19c_RAC_install_OL9/Screen Shot 2024-02-13 at 23.02.05.png> "Guest Operating System Installation")
 The resulting console window will contain the Oracle Linux boot screen.    
 Click arrow up key to select "Install Oracle Linux 9.3.0" option and click enter key.
 ![19c_RAC_install](<./19c_RAC_install_OL9/Screen Shot 2024-02-13 at 23.03.11.png> "Guest Operating System Installation")
 Wait a few seconds, the interactive installation window will prepare.
 ![19c_RAC_install](<./19c_RAC_install_OL9/Screen Shot 2024-02-13 at 23.03.43.png> "Guest Operating System Installation")
-Continue through the Oracle Linux 9 installation as you would for a basic server. A general pictorial guide to the installation can be found here. More specifically, it should be a server installation with a minimum of 4G+ swap, firewall disabled, SELinux set to permissive and the following package groups installed:
-- Server with GUI
-- Hardware Monitoring Utilities
-- Large Systems Performance
-- Network file system client
-- Performance Tools
-- Compatibility Libraries
-- Development Tools
+Continue through the Oracle Linux 9 installation as you would for a basic server. 
+![19c_RAC_install](<./19c_RAC_install_OL9/Screen Shot 2024-02-13 at 23.06.05.png> "Guest Operating System Installation")
+More specifically, it should be a server installation with a minimum of 4G+ swap, firewall disabled, SELinux set to permissive and the following package groups installed: "Server with GUI"
+![19c_RAC_install](<./19c_RAC_install_OL9/Screen Shot 2024-02-13 at 23.06.49.png> "Guest Operating System Installation")
+![19c_RAC_install](<./19c_RAC_install_OL9/Screen Shot 2024-02-13 at 23.09.49.png> "Guest Operating System Installation")
+![19c_RAC_install](<./19c_RAC_install_OL9/Screen Shot 2024-02-13 at 23.12.50.png> "Guest Operating System Installation")
+![19c_RAC_install](<./19c_RAC_install_OL9/Screen Shot 2024-02-13 at 23.12.59.png> "Guest Operating System Installation")
+![19c_RAC_install](<./19c_RAC_install_OL9/Screen Shot 2024-02-13 at 23.13.08.png> "Guest Operating System Installation")
+![19c_RAC_install](<./19c_RAC_install_OL9/Screen Shot 2024-02-13 at 23.15.49.png> "Guest Operating System Installation")
+![19c_RAC_install](<./19c_RAC_install_OL9/Screen Shot 2024-02-13 at 23.16.36.png> "Guest Operating System Installation")
+![19c_RAC_install](<./19c_RAC_install_OL9/Screen Shot 2024-02-13 at 23.17.46.png> "Guest Operating System Installation")
 
 To be consistent with the rest of the article, the following information should be set during the installation.
 - hostname: ol9-19c-rac1.localdomain
