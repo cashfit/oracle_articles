@@ -753,7 +753,7 @@ Prior to 11gR2 we would probably use the "runcluvfy.sh" utility in the clusterwa
 /mountpoint/clusterware/runcluvfy.sh stage -pre crsinst -n ol9-19c-rac1,ol9-19c-rac2 -verbose
 ```
 
-For OpenSSH version 8 or later, the SSH equivalence during the OUI installer will fail for unsupported SSH key format. Manually setup SSH passwordless is necessary for a successfully installation.
+For OpenSSH version 8 or later, the SSH equivalence during the OUI installer will fail for unsupported SSH key format. Manually setup SSH passwordless is necessary for a successfully installation, with ssh-keygen -m pem option.
 
 If you get any failures be sure to correct them before proceeding.
 The virtual machine setup is now complete.
@@ -974,7 +974,7 @@ Now product-specific root actions will be performed.
 Relinking oracle with rac_on option
 Using configuration parameter file: /u01/app/19.0.0/grid/crs/install/crsconfig_params
 The log of current session can be found at:
-  /u01/app/oracle/crsdata/ol9-19c-rac2/crsconfig/rootcrs_ol7-19c-rac2_2019-11-19_06-24-56AM.log
+  /u01/app/oracle/crsdata/ol9-19c-rac2/crsconfig/rootcrs_ol9-19c-rac2_2019-11-19_06-24-56AM.log
 2024/2/13 06:25:07 CLSRSC-594: Executing installation step 1 of 19: 'SetupTFA'.
 2024/2/13 06:25:07 CLSRSC-594: Executing installation step 2 of 19: 'ValidateEnv'.
 2024/2/13 06:25:07 CLSRSC-363: User ignored prerequisites during installation
@@ -999,7 +999,7 @@ The log of current session can be found at:
 2019/11/19 06:28:23 CLSRSC-594: Executing installation step 18 of 19: 'ConfigNode'.
 2019/11/19 06:29:24 CLSRSC-594: Executing installation step 19 of 19: 'PostConfig'.
 2019/11/19 06:29:56 CLSRSC-325: Configure Oracle Grid Infrastructure for a Cluster ... succeeded
-[root@ol7-19c-rac2 ~]#
+[root@ol9-19c-rac2 ~]#
 ```
 
 Once the scripts have completed, return to the "Execute Configuration Scripts" screen on "ol9-19c-rac1" and click the "OK" button.
@@ -1036,35 +1036,35 @@ ora.ons
 Cluster Resources
 --------------------------------------------------------------------------------
 ora.ASMNET1LSNR_ASM.lsnr(ora.asmgroup)
-      1        ONLINE  ONLINE       ol7-19c-rac1             STABLE
-      2        ONLINE  ONLINE       ol7-19c-rac2             STABLE
+      1        ONLINE  ONLINE       ol9-19c-rac1             STABLE
+      2        ONLINE  ONLINE       ol9-19c-rac2             STABLE
       3        OFFLINE OFFLINE                               STABLE
 ora.DATA.dg(ora.asmgroup)
-      1        ONLINE  ONLINE       ol7-19c-rac1             STABLE
-      2        ONLINE  ONLINE       ol7-19c-rac2             STABLE
+      1        ONLINE  ONLINE       ol9-19c-rac1             STABLE
+      2        ONLINE  ONLINE       ol9-19c-rac2             STABLE
       3        OFFLINE OFFLINE                               STABLE
 ora.LISTENER_SCAN1.lsnr
-      1        ONLINE  ONLINE       ol7-19c-rac1             STABLE
+      1        ONLINE  ONLINE       ol9-19c-rac1             STABLE
 ora.asm(ora.asmgroup)
-      1        ONLINE  ONLINE       ol7-19c-rac1             Started,STABLE
-      2        ONLINE  ONLINE       ol7-19c-rac2             Started,STABLE
+      1        ONLINE  ONLINE       ol9-19c-rac1             Started,STABLE
+      2        ONLINE  ONLINE       ol9-19c-rac2             Started,STABLE
       3        OFFLINE OFFLINE                               STABLE
 ora.asmnet1.asmnetwork(ora.asmgroup)
-      1        ONLINE  ONLINE       ol7-19c-rac1             STABLE
-      2        ONLINE  ONLINE       ol7-19c-rac2             STABLE
+      1        ONLINE  ONLINE       ol9-19c-rac1             STABLE
+      2        ONLINE  ONLINE       ol9-19c-rac2             STABLE
       3        OFFLINE OFFLINE                               STABLE
 ora.cvu
-      1        ONLINE  ONLINE       ol7-19c-rac1             STABLE
-ora.ol7-19c-rac1.vip
-      1        ONLINE  ONLINE       ol7-19c-rac1             STABLE
-ora.ol7-19c-rac2.vip
-      1        ONLINE  ONLINE       ol7-19c-rac2             STABLE
+      1        ONLINE  ONLINE       ol9-19c-rac1             STABLE
+ora.ol9-19c-rac1.vip
+      1        ONLINE  ONLINE       ol9-19c-rac1             STABLE
+ora.ol9-19c-rac2.vip
+      1        ONLINE  ONLINE       ol9-19c-rac2             STABLE
 ora.qosmserver
-      1        ONLINE  ONLINE       ol7-19c-rac1             STABLE
+      1        ONLINE  ONLINE       ol9-19c-rac1             STABLE
 ora.scan1.vip
-      1        ONLINE  ONLINE       ol7-19c-rac1             STABLE
+      1        ONLINE  ONLINE       ol9-19c-rac1             STABLE
 --------------------------------------------------------------------------------
-[root@ol7-19c-rac1 ~]#
+[root@ol9-19c-rac1 ~]#
 ```
 
 At this point it is probably a good idea to shutdown both VMs and take snapshots. Remember to make a fresh zip of the ASM disks on the host machine, which you will need to restore if you revert to the post-grid snapshots.
