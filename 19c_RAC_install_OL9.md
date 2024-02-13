@@ -386,47 +386,38 @@ At this point, the networking for the first node should look something like the 
 ```console
 # ifconfig
 enp0s3: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
-        ether 08:00:27:f6:88:78  txqueuelen 1000  (Ethernet)
-        RX packets 0  bytes 0 (0.0 B)
+        ether 08:00:27:53:d9:97  txqueuelen 1000  (Ethernet)
+        RX packets 58038  bytes 83641252 (79.7 MiB)
         RX errors 0  dropped 0  overruns 0  frame 0
-        TX packets 0  bytes 0 (0.0 B)
+        TX packets 5521  bytes 349672 (341.4 KiB)
         TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
 
 enp0s8: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
         inet 192.168.56.101  netmask 255.255.255.0  broadcast 192.168.56.255
-        inet6 fe80::cf8d:317d:534:17d9  prefixlen 64  scopeid 0x20<link>
-        ether 08:00:27:82:06:32  txqueuelen 1000  (Ethernet)
-        RX packets 574  bytes 54444 (53.1 KiB)
+        inet6 fe80::a00:27ff:feac:6df9  prefixlen 64  scopeid 0x20<link>
+        ether 08:00:27:ac:6d:f9  txqueuelen 1000  (Ethernet)
+        RX packets 2694  bytes 264006 (257.8 KiB)
         RX errors 0  dropped 0  overruns 0  frame 0
-        TX packets 547  bytes 71219 (69.5 KiB)
+        TX packets 2333  bytes 622380 (607.7 KiB)
         TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
 
 enp0s9: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
-        inet 192.168.1.101  netmask 255.255.255.0  broadcast 192.168.1.255
-        inet6 fe80::9a9a:f249:61d1:5447  prefixlen 64  scopeid 0x20<link>
-        ether 08:00:27:2e:2c:cf  txqueuelen 1000  (Ethernet)
+        inet 172.16.0.101  netmask 255.255.255.0  broadcast 172.16.0.255
+        inet6 fe80::a00:27ff:fead:1731  prefixlen 64  scopeid 0x20<link>
+        ether 08:00:27:ad:17:31  txqueuelen 1000  (Ethernet)
         RX packets 0  bytes 0 (0.0 B)
         RX errors 0  dropped 0  overruns 0  frame 0
-        TX packets 29  bytes 4250 (4.1 KiB)
+        TX packets 58  bytes 6048 (5.9 KiB)
         TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
 
 lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
         inet 127.0.0.1  netmask 255.0.0.0
         inet6 ::1  prefixlen 128  scopeid 0x10<host>
-        loop  txqueuelen 0  (Local Loopback)
-        RX packets 68  bytes 5780 (5.6 KiB)
+        loop  txqueuelen 1000  (Local Loopback)
+        RX packets 39  bytes 3690 (3.6 KiB)
         RX errors 0  dropped 0  overruns 0  frame 0
-        TX packets 68  bytes 5780 (5.6 KiB)
+        TX packets 39  bytes 3690 (3.6 KiB)
         TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
-
-virbr0: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500
-        inet 192.168.122.1  netmask 255.255.255.0  broadcast 192.168.122.255
-        ether 52:54:00:4a:12:2f  txqueuelen 0  (Ethernet)
-        RX packets 0  bytes 0 (0.0 B)
-        RX errors 0  dropped 0  overruns 0  frame 0
-        TX packets 0  bytes 0 (0.0 B)
-        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
-
 #
 ```
 
