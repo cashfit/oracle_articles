@@ -11,7 +11,7 @@ One of the biggest obstacles preventing people from setting up test RAC environm
 
 Using VirtualBox you can run multiple Virtual Machines (VMs) on a single server, allowing you to run both RAC nodes on a single machine. In addition, it allows you to set up shared virtual disks, overcoming the obstacle of expensive shared storage.
 
-![19c_RAC_install](<./19c_RAC_install_OL9/19c_arch_Diagram.png "Introduction")
+![19c_RAC_install](<./19c_RAC_install/19c_arch_Diagram.png "Introduction")
 
 
 Before you launch into this installation, here are a few things to consider.
