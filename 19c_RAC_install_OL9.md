@@ -31,9 +31,9 @@ Download the following software.
 - [VirtualBox (7.0.12)](http://www.virtualbox.org/wiki/Downloads)
 - [Oracle 19c (19.3) Software (64 bit)](https://www.oracle.com/database/technologies/oracle19c-linux-downloads.html)
 
-This article has been updated for the 19c release and Oracle Linux 9 combination, but the installation is essentially unchanged since 12.2.0.1. Any variations specific for 19c will be noted.
+This article has been updated for the 19c release and Oracle Linux 9 combination, but the installation is essentially unchanged since 12.2.0.1. Any variations specific for 19c and OL9 will be highlight.
 
-Depending on your version of VirtualBox and Oracle Linux, there may be some slight variation in how the screen shots look.
+Depending on your minor version of VirtualBox and Oracle Linux, there may be some slight variation in how the screen shots look.
 
 ## VirtualBox Installation
 
@@ -235,7 +235,7 @@ useradd -u 54321 -g oinstall -G dba,oper,backupdba,dgdba,kmdba,asmdba,asmoper,as
 
 ### Additional Setup
 The following steps must be performed, whether you did the manual or automatic setup.
-Perform the following steps whilst logged into the "ol7-19c-rac1" virtual machine as the root user.
+Perform the following steps whilst logged into the "ol9-19c-rac1" virtual machine as the root user.
 Set the password for the "oracle" user.
 ```console
 passwd oracle
@@ -245,16 +245,16 @@ Apart form the localhost address, the "/etc/hosts" file can be left blank, but I
 ```console
 127.0.0.1       localhost.localdomain   localhost
 # Public
-192.168.56.101   ol7-19c-rac1
-192.168.56.102   ol7-19c-rac2
+192.168.56.101   ol9-19c-rac1
+192.168.56.102   ol9-19c-rac2
 # Private
-192.168.1.101   ol7-19c-rac1-priv
-192.168.1.102   ol7-19c-rac2-priv
+192.168.1.101   ol9-19c-rac1-priv
+192.168.1.102   ol9-19c-rac2-priv
 # Virtual
-192.168.56.103   ol7-19c-rac1-vip
-192.168.56.104   ol7-19c-rac2-vip
+192.168.56.103   ol9-19c-rac1-vip
+192.168.56.104   ol9-19c-rac2-vip
 # SCAN
-#192.168.56.105   ol7-19c-scan
+#192.168.56.105   ol9-19c-scan
 ```
 
 The SCAN address is commented out of the hosts file because it must be resolved using a DNS, so it can round-robin between 3 addresses on the same subnet as the public IPs. The DNS can be configured on the host machine using [BIND](https://oracle-base.com/articles/linux/dns-configuration-for-scan) or [Dnsmasq](https://oracle-base.com/articles/linux/dnsmasq-for-simple-dns-configurations), which is much simpler. If you are using Dnsmasq, put the RAC-specific entries in the hosts machines "/etc/host" file, with the SCAN entries uncommented, and restart Dnsmasq.
@@ -325,11 +325,11 @@ virbr0: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500
 
 With this in place and the DNS configured the SCAN address is being resolved to all three IP addresses.
 ```console
-# nslookup ol7-19c-scan
+# nslookup ol9-19c-scan
 Server:		192.168.56.1
 Address:	192.168.56.1#53
 
-Name:	ol7-19c-scan.localdomain
+Name:	ol9-19c-scan.localdomain
 Address: 192.168.56.105
 #
 ```
@@ -453,7 +453,7 @@ The VM will need to be restarted for the guest additions to be used properly. Th
 
 ## Create Shared Disks
 
-Shut down the "ol7-19c-rac1" virtual machine using the following command.
+Shut down the "ol9-19c-rac1" virtual machine using the following command.
 ```console
 # shutdown -h now
 ```
@@ -488,8 +488,8 @@ $ VBoxManage modifyhd asm4.vdi --type shareable
 If you are using a Windows host, you will have to modify the paths, but the process is the same.
 ```console
 C:
-mkdir C:\VirtualBox\ol7-19c-rac
-cd C:\VirtualBox\ol7-19c-rac
+mkdir C:\VirtualBox\ol9-19c-rac
+cd C:\VirtualBox\ol9-19c-rac
 
 "c:\Program Files\Oracle\VirtualBox\VBoxManage" createhd --filename asm1.vdi --size 10240 --format VDI --variant Fixed
 "c:\Program Files\Oracle\VirtualBox\VBoxManage" createhd --filename asm2.vdi --size 10240 --format VDI --variant Fixed
@@ -620,7 +620,7 @@ Shut down the "ol9-19c-rac1" virtual machine using the following command.
 Manually clone the "ol9-19c-rac1.vdi" disk using the following commands on the host server.
 ```console
 $ mkdir -p /u03/VirtualBox/ol9-19c-rac2
-$ VBoxManage clonehd /u01/VirtualBox/ol7-19c-rac1/ol7-19c-rac1.vdi /u03/VirtualBox/ol9-19c-rac2/ol9-19c-rac2.vdi
+$ VBoxManage clonehd /u01/VirtualBox/ol9-19c-rac1/ol9-19c-rac1.vdi /u03/VirtualBox/ol9-19c-rac2/ol9-19c-rac2.vdi
 
 Rem Windows
 mkdir "C:\VirtualBox\ol9-19c-rac2"
@@ -1117,7 +1117,7 @@ $ zip PostDB.zip *.vdi
 ```
 
 ## Create a Database
-Make sure the "ol9-19c-rac1" and "ol9-19c-rac2" virtual machines are started, then login to "ol7-19c-rac1" as the oracle user and start the Database Creation Asistant (DBCA).
+Make sure the "ol9-19c-rac1" and "ol9-19c-rac2" virtual machines are started, then login to "ol9-19c-rac1" as the oracle user and start the Database Creation Asistant (DBCA).
 ```console
 $ db_env
 $ dbca
