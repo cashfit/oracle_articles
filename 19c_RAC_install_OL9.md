@@ -16,7 +16,7 @@ Using VirtualBox you can run multiple Virtual Machines (VMs) on a single server,
 
 Before you launch into this installation, here are a few things to consider.
 - The finished system includes the host operating system, three guest operating systems, two sets of Oracle Grid Infrastructure (Clusterware + ASM) and two Database instances all on a single machine. As you can imagine, this requires a significant amount of disk space, CPU and memory.
-- Following on from the last point, the RAC node VMs will each need at least 6G of RAM, but you will see I used 10G for each, and it was still slow. Don't assume you will be able to run this on a small PC or laptop. You won't.
+- Following on from the last point, the RAC node VMs will each need at least 8G of RAM, but you will see I used 10G for each, and it was still slow. Don't assume you will be able to run this on a small PC or laptop. You won't.
 - This procedure provides a bare bones installation to get the RAC working. There is no redundancy in the Grid Infrastructure installation or the ASM installation. To add this, simply create double the amount of shared disks and select the "Normal" redundancy option when it is offered. Of course, this will take more disk space.
 - This is not, and should not be considered, instructions for a production-ready system. It's simply to allow you to see what is required to install RAC and give you a system to experiment with.
 - The DNS is required to support the scan listener. In previous releases I suggested running the DNS on the host server, but this is easier.
@@ -27,11 +27,11 @@ Before you launch into this installation, here are a few things to consider.
 ## Download Software
 
 Download the following software.
-- [Oracle Linux 7](http://edelivery.oracle.com/linux) (Use the latest spin eg. 7.7)
-- [VirtualBox (6.0.10)](http://www.virtualbox.org/wiki/Downloads)
-- [Oracle 19c (19.3) Software (64 bit)](http://www.oracle.com/technetwork/database/enterprise-edition/downloads/index.html)
+- [Oracle Linux 9](https://yum.oracle.com/oracle-linux-isos.html) (Use the latest spin eg. 9.3)
+- [VirtualBox (7.0.12)](http://www.virtualbox.org/wiki/Downloads)
+- [Oracle 19c (19.3) Software (64 bit)](https://www.oracle.com/database/technologies/oracle19c-linux-downloads.html)
 
-This article has been updated for the 19c release, but the installation is essentially unchanged since 12.2.0.1. Any variations specific for 19c will be noted.
+This article has been updated for the 19c release and Oracle Linux 9 combination, but the installation is essentially unchanged since 12.2.0.1. Any variations specific for 19c will be noted.
 
 Depending on your version of VirtualBox and Oracle Linux, there may be some slight variation in how the screen shots look.
 
@@ -61,7 +61,7 @@ We need to make sure a host-only network is configured and check/modify the IP r
 
 Now we must define the two virtual RAC nodes. We can save time by defining one VM, then cloning it when it is installed.
 
-Start VirtualBox and click the "New" button on the toolbar. Enter the name "ol7-19c-rac1", OS "Linux" and Version "Oracle (64 bit)", then click the "Continue" button.
+Start VirtualBox and click the "New" button on the toolbar. Enter the name "ol9-19c-rac1", OS "Linux" and Version "Oracle (64 bit)", then click the "Continue" button.
 ![19c_RAC_install](./19c_RAC_install/Jietu20191119-112613@2x.jpg "Virtual Machine Setup")
 Enter "4096" as the base memory size, then click the "Continue" button.
 ![19c_RAC_install](./19c_RAC_install/Jietu20191119-112838@2x.jpg "Virtual Machine Setup")
@@ -73,7 +73,7 @@ Acccept the "Dynamically allocated" option by clicking the "Continue" button.
 ![19c_RAC_install](./19c_RAC_install/Jietu20191119-112939@2x.jpg "Virtual Machine Setup")
 Accept the default location and set the size to "50G", then click the "Create" button. If you can spread the virtual disks onto different physical disks, that will improve performance.
 ![19c_RAC_install](./19c_RAC_install/Jietu20191119-113049@2x.jpg "Virtual Machine Setup")
-The "ol7-19c-rac1" VM will appear on the left hand pane. Scroll down the details on the right and click on the "Network" link.
+The "ol9-19c-rac1" VM will appear on the left hand pane. Scroll down the details on the right and click on the "Network" link.
 ![19c_RAC_install](./19c_RAC_install/Jietu20191119-113536@2x.jpg "Virtual Machine Setup")
 Make sure "Adapter 1" is enabled, set to "NAT", then click on the "Adapter 2" tab.
 ![19c_RAC_install](./19c_RAC_install/Jietu20191119-113617@2x.jpg "Virtual Machine Setup")
@@ -92,7 +92,7 @@ The resulting console window will contain the Oracle Linux boot screen.
 ![19c_RAC_install](./19c_RAC_install/Jietu20191119-113956@2x.jpg "Guest Operating System Installation")
 
 ![19c_RAC_install](./19c_RAC_install/Jietu20191119-114118@2x.jpg "Guest Operating System Installation")
-Continue through the Oracle Linux 7 installation as you would for a basic server. A general pictorial guide to the installation can be found here. More specifically, it should be a server installation with a minimum of 4G+ swap, firewall disabled, SELinux set to permissive and the following package groups installed:
+Continue through the Oracle Linux 9 installation as you would for a basic server. A general pictorial guide to the installation can be found here. More specifically, it should be a server installation with a minimum of 4G+ swap, firewall disabled, SELinux set to permissive and the following package groups installed:
 - Server with GUI
 - Hardware Monitoring Utilities
 - Large Systems Performance
@@ -102,7 +102,7 @@ Continue through the Oracle Linux 7 installation as you would for a basic server
 - Development Tools
 
 To be consistent with the rest of the article, the following information should be set during the installation.
-- hostname: ol7-19c-rac1.localdomain
+- hostname: ol9-19c-rac1.localdomain
 - enp0s3 (eth0): DHCP (Connect Automatically)
 - enp0s8 (eth1): IP=192.168.56.101, Subnet=255.255.255.0, Gateway=192.168.56.1, DNS=192.168.56.1, Search=localdomain (Connect Automatically)
 - enp0s9 (eth2): IP=192.168.1.101, Subnet=255.255.255.0, Gateway=<blank>, DNS=<blank>, Search=<blank> (Connect Automatically)
@@ -113,9 +113,9 @@ You are free to change the IP addresses to suit your network, but remember to st
 Perform either the Automatic Setup or the Manual Setup to complete the basic prerequisites. The Additional Setup is required for all installations.
 
 ### Automatic Setup
-If you plan to use the "oracle-rdbms-server-12cR1-preinstall" package to perform all your prerequisite setup, issue the following command.
+If you plan to use the "oracle-database-preinstall-19c" package to perform all your prerequisite setup, issue the following command.
 ```console
-# yum install -y oracle-database-preinstall-19c
+# yum localinstall -y oracle-database-preinstall-19c-1.0-1.el9.x86_64.rpm
 ```
 
 Earlier versions of Oracle Linux required manual setup of the Yum repository by following the instructions at http://public-yum.oracle.com.
@@ -356,7 +356,7 @@ If you have the Linux firewall enabled, you will need to disable or configure it
 
 Either configure NTP, or make sure it is not configured so the Oracle Cluster Time Synchronization Service (ctssd) can synchronize the times of the RAC nodes. 
 
-Make sure NTP (Chrony on OL7/RHEL7) is enabled.
+Make sure NTP (Chrony on OL9/RHEL9) is enabled.
 ```console
 # systemctl enable chronyd
 # systemctl restart chronyd
@@ -378,7 +378,7 @@ Log in as the "oracle" user and add the following lines at the end of the "/home
 export TMP=/tmp
 export TMPDIR=$TMP
 
-export ORACLE_HOSTNAME=ol7-19c-rac1
+export ORACLE_HOSTNAME=ol9-19c-rac1
 export ORACLE_UNQNAME=CDBRAC
 export ORACLE_BASE=/u01/app/oracle
 export GRID_HOME=/u01/app/19.0.0/grid
@@ -459,8 +459,8 @@ Shut down the "ol7-19c-rac1" virtual machine using the following command.
 ```
 On the host server, create 4 sharable virtual disks and associate them as virtual media using the following commands. You can pick a different location, but make sure they are outside the existing VM directory.
 ```console
-$ mkdir -p /u04/VirtualBox/ol7-19c-rac
-$ cd /u04/VirtualBox/ol7-19c-rac
+$ mkdir -p /u04/VirtualBox/ol9-19c-rac
+$ cd /u04/VirtualBox/ol9-19c-rac
 $
 $ # Create the disks and associate them with VirtualBox as virtual media.
 $ VBoxManage createhd --filename asm1.vdi --size 10240 --format VDI --variant Fixed
@@ -469,13 +469,13 @@ $ VBoxManage createhd --filename asm3.vdi --size 10240 --format VDI --variant Fi
 $ VBoxManage createhd --filename asm4.vdi --size 10240 --format VDI --variant Fixed
 $
 $ # Connect them to the VM.
-$ VBoxManage storageattach ol7-19c-rac1 --storagectl "SATA" --port 1 --device 0 --type hdd \
+$ VBoxManage storageattach ol9-19c-rac1 --storagectl "SATA" --port 1 --device 0 --type hdd \
     --medium asm1.vdi --mtype shareable
-$ VBoxManage storageattach ol7-19c-rac1 --storagectl "SATA" --port 2 --device 0 --type hdd \
+$ VBoxManage storageattach ol9-19c-rac1 --storagectl "SATA" --port 2 --device 0 --type hdd \
     --medium asm2.vdi --mtype shareable
-$ VBoxManage storageattach ol7-19c-rac1 --storagectl "SATA" --port 3 --device 0 --type hdd \
+$ VBoxManage storageattach ol9-19c-rac1 --storagectl "SATA" --port 3 --device 0 --type hdd \
     --medium asm3.vdi --mtype shareable
-$ VBoxManage storageattach ol7-19c-rac1 --storagectl "SATA" --port 4 --device 0 --type hdd \
+$ VBoxManage storageattach ol9-19c-rac1 --storagectl "SATA" --port 4 --device 0 --type hdd \
     --medium asm4.vdi --mtype shareable
 $
 $ # Make shareable.
@@ -496,17 +496,17 @@ cd C:\VirtualBox\ol7-19c-rac
 "c:\Program Files\Oracle\VirtualBox\VBoxManage" createhd --filename asm3.vdi --size 10240 --format VDI --variant Fixed
 "c:\Program Files\Oracle\VirtualBox\VBoxManage" createhd --filename asm4.vdi --size 10240 --format VDI --variant Fixed
 
-"c:\Program Files\Oracle\VirtualBox\VBoxManage" storageattach ol7-19c-rac1 --storagectl "SATA" --port 1 --device 0 --type hdd --medium asm1.vdi --mtype shareable
-"c:\Program Files\Oracle\VirtualBox\VBoxManage" storageattach ol7-19c-rac1 --storagectl "SATA" --port 2 --device 0 --type hdd --medium asm2.vdi --mtype shareable
-"c:\Program Files\Oracle\VirtualBox\VBoxManage" storageattach ol7-19c-rac1 --storagectl "SATA" --port 3 --device 0 --type hdd --medium asm3.vdi --mtype shareable
-"c:\Program Files\Oracle\VirtualBox\VBoxManage" storageattach ol7-19c-rac1 --storagectl "SATA" --port 4 --device 0 --type hdd --medium asm4.vdi --mtype shareable
+"c:\Program Files\Oracle\VirtualBox\VBoxManage" storageattach ol9-19c-rac1 --storagectl "SATA" --port 1 --device 0 --type hdd --medium asm1.vdi --mtype shareable
+"c:\Program Files\Oracle\VirtualBox\VBoxManage" storageattach ol9-19c-rac1 --storagectl "SATA" --port 2 --device 0 --type hdd --medium asm2.vdi --mtype shareable
+"c:\Program Files\Oracle\VirtualBox\VBoxManage" storageattach ol9-19c-rac1 --storagectl "SATA" --port 3 --device 0 --type hdd --medium asm3.vdi --mtype shareable
+"c:\Program Files\Oracle\VirtualBox\VBoxManage" storageattach ol9-19c-rac1 --storagectl "SATA" --port 4 --device 0 --type hdd --medium asm4.vdi --mtype shareable
 
 "c:\Program Files\Oracle\VirtualBox\VBoxManage" modifyhd asm1.vdi --type shareable
 "c:\Program Files\Oracle\VirtualBox\VBoxManage" modifyhd asm2.vdi --type shareable
 "c:\Program Files\Oracle\VirtualBox\VBoxManage" modifyhd asm3.vdi --type shareable
 "c:\Program Files\Oracle\VirtualBox\VBoxManage" modifyhd asm4.vdi --type shareable
 ```
-Start the "ol7-19c-rac1" virtual machine by clicking the "Start" button on the toolbar. When the server has started, log in as the root user so you can configure the shared disks. The current disks can be seen by issuing the following commands.
+Start the "ol9-19c-rac1" virtual machine by clicking the "Start" button on the toolbar. When the server has started, log in as the root user so you can configure the shared disks. The current disks can be seen by issuing the following commands.
 ```console
 # cd /dev
 # ls sd*
@@ -613,52 +613,52 @@ The shared disks are now configured for the grid infrastructure.
 
 ## Clone the Virtual Machine
 Later versions of VirtualBox allow you to clone VMs, but these also attempt to clone the shared disks, which is not what we want. Instead we must manually clone the VM.
-Shut down the "ol7-19c-rac1" virtual machine using the following command.
+Shut down the "ol9-19c-rac1" virtual machine using the following command.
 ```console
 # shutdown -h now
 ```
-Manually clone the "ol7-19c-rac1.vdi" disk using the following commands on the host server.
+Manually clone the "ol9-19c-rac1.vdi" disk using the following commands on the host server.
 ```console
-$ mkdir -p /u03/VirtualBox/ol7-19c-rac2
-$ VBoxManage clonehd /u01/VirtualBox/ol7-19c-rac1/ol7-19c-rac1.vdi /u03/VirtualBox/ol7-19c-rac2/ol7-19c-rac2.vdi
+$ mkdir -p /u03/VirtualBox/ol9-19c-rac2
+$ VBoxManage clonehd /u01/VirtualBox/ol7-19c-rac1/ol7-19c-rac1.vdi /u03/VirtualBox/ol9-19c-rac2/ol9-19c-rac2.vdi
 
 Rem Windows
-mkdir "C:\VirtualBox\ol7-19c-rac2"
-"c:\Program Files\Oracle\VirtualBox\VBoxManage" clonehd "C:\VirtualBox\ol7-19c-rac1\ol7-19c-rac1.vdi" "C:\VirtualBox\ol7-19c-rac2\ol7-19c-rac2.vdi"
+mkdir "C:\VirtualBox\ol9-19c-rac2"
+"c:\Program Files\Oracle\VirtualBox\VBoxManage" clonehd "C:\VirtualBox\ol9-19c-rac1\ol9-19c-rac1.vdi" "C:\VirtualBox\ol9-19c-rac2\ol9-19c-rac2.vdi"
 ```
-Create the "ol7-19c-rac2" virtual machine in VirtualBox in the same way as you did for "ol7-19c-rac1", with the exception of using an existing "ol7-19c-rac2.vdi" virtual hard drive.
+Create the "ol9-19c-rac2" virtual machine in VirtualBox in the same way as you did for "ol9-19c-rac1", with the exception of using an existing "ol9-19c-rac2.vdi" virtual hard drive.
 
-Remember to add the three network adaptor as you did on the "ol7-19c-rac1" VM. When the VM is created, attach the shared disks to this VM.
+Remember to add the three network adaptor as you did on the "ol9-19c-rac1" VM. When the VM is created, attach the shared disks to this VM.
 ```console
 $ # Linux : Switch to the shared storage location and attach them.
-$ cd /u04/VirtualBox/ol7-19c-rac
+$ cd /u04/VirtualBox/ol9-19c-rac
 $
-$ VBoxManage storageattach ol7-19c-rac2 --storagectl "SATA" --port 1 --device 0 --type hdd --medium asm1.vdi --mtype shareable
-$ VBoxManage storageattach ol7-19c-rac2 --storagectl "SATA" --port 2 --device 0 --type hdd --medium asm2.vdi --mtype shareable
-$ VBoxManage storageattach ol7-19c-rac2 --storagectl "SATA" --port 3 --device 0 --type hdd --medium asm3.vdi --mtype shareable
-$ VBoxManage storageattach ol7-19c-rac2 --storagectl "SATA" --port 4 --device 0 --type hdd --medium asm4.vdi --mtype shareable
+$ VBoxManage storageattach ol9-19c-rac2 --storagectl "SATA" --port 1 --device 0 --type hdd --medium asm1.vdi --mtype shareable
+$ VBoxManage storageattach ol9-19c-rac2 --storagectl "SATA" --port 2 --device 0 --type hdd --medium asm2.vdi --mtype shareable
+$ VBoxManage storageattach ol9-19c-rac2 --storagectl "SATA" --port 3 --device 0 --type hdd --medium asm3.vdi --mtype shareable
+$ VBoxManage storageattach ol9-19c-rac2 --storagectl "SATA" --port 4 --device 0 --type hdd --medium asm4.vdi --mtype shareable
 
 
 Rem Windows : Switch to the shared storage location and attach them.
 C:
-cd C:\VirtualBox\ol7-19c-rac
+cd C:\VirtualBox\ol9-19c-rac
 
-"c:\Program Files\Oracle\VirtualBox\VBoxManage" storageattach ol7-19c-rac2 --storagectl "SATA" --port 1 --device 0 --type hdd --medium asm1.vdi --mtype shareable
-"c:\Program Files\Oracle\VirtualBox\VBoxManage" storageattach ol7-19c-rac2 --storagectl "SATA" --port 2 --device 0 --type hdd --medium asm2.vdi --mtype shareable
-"c:\Program Files\Oracle\VirtualBox\VBoxManage" storageattach ol7-19c-rac2 --storagectl "SATA" --port 3 --device 0 --type hdd --medium asm3.vdi --mtype shareable
-"c:\Program Files\Oracle\VirtualBox\VBoxManage" storageattach ol7-19c-rac2 --storagectl "SATA" --port 4 --device 0 --type hdd --medium asm4.vdi --mtype shareable
+"c:\Program Files\Oracle\VirtualBox\VBoxManage" storageattach ol9-19c-rac2 --storagectl "SATA" --port 1 --device 0 --type hdd --medium asm1.vdi --mtype shareable
+"c:\Program Files\Oracle\VirtualBox\VBoxManage" storageattach ol9-19c-rac2 --storagectl "SATA" --port 2 --device 0 --type hdd --medium asm2.vdi --mtype shareable
+"c:\Program Files\Oracle\VirtualBox\VBoxManage" storageattach ol9-19c-rac2 --storagectl "SATA" --port 3 --device 0 --type hdd --medium asm3.vdi --mtype shareable
+"c:\Program Files\Oracle\VirtualBox\VBoxManage" storageattach ol9-19c-rac2 --storagectl "SATA" --port 4 --device 0 --type hdd --medium asm4.vdi --mtype shareable
 ```
-Start the "ol7-19c-rac2" virtual machine by clicking the "Start" button on the toolbar. Ignore any network errors during the startup.
+Start the "ol9-19c-rac2" virtual machine by clicking the "Start" button on the toolbar. Ignore any network errors during the startup.
 
-Log in to the "ol7-19c-rac2" virtual machine as the "root" user so we can reconfigure the network settings to match the following.
-- hostname: ol7-19c-rac2.localdomain
+Log in to the "ol9-19c-rac2" virtual machine as the "root" user so we can reconfigure the network settings to match the following.
+- hostname: ol9-19c-rac2.localdomain
 - enp0s3 (eth0): DHCP (*Not* Connect Automatically)
 - enp0s8 (eth1): IP=192.168.56.102, Subnet=255.255.255.0, Gateway=192.168.56.1, DNS=192.168.56.1, Search=localdomain (Connect Automatically)
 - enp0s9 (eth2): IP=192.168.1.102, Subnet=255.255.255.0, Gateway=<blank>, DNS=<blank>, Search=<blank> (Connect Automatically)
 
 Amend the hostname in the "/etc/hostname" file.
 ```console
-ol7-19c-rac2.localdomain
+ol9-19c-rac2.localdomain
 ```
 Unlike previous Linux versions, we shouldn't have to edit the MAC address associated with the network adapters, but we will have to alter their IP addresses.
 
@@ -713,27 +713,27 @@ lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
 
 #
 ```
-Edit the "/home/oracle/.bash_profile" file on the "ol7-19c-rac2" node to correct the ORACLE_SID and ORACLE_HOSTNAME values.
+Edit the "/home/oracle/.bash_profile" file on the "ol9-19c-rac2" node to correct the ORACLE_SID and ORACLE_HOSTNAME values.
 ```console
 export ORACLE_SID=cdbrac2
-export ORACLE_HOSTNAME=ol7-19c-rac2.localdomain
+export ORACLE_HOSTNAME=ol9-19c-rac2.localdomain
 ```
 Also, amend the ORACLE_SID setting in the "/home/oracle/db_env" and "/home/oracle/grid_env" files.
 
-Restart the "ol7-19c-rac2" virtual machine and start the "ol7-19c-rac1" virtual machine. When both nodes have started, check they can both ping all the public and private IP addresses using the following commands.
+Restart the "ol9-19c-rac2" virtual machine and start the "ol9-19c-rac1" virtual machine. When both nodes have started, check they can both ping all the public and private IP addresses using the following commands.
 ```console
-ping -c 3 ol7-19c-rac1
-ping -c 3 ol7-19c-rac1-priv
-ping -c 3 ol7-19c-rac2
-ping -c 3 ol7-19c-rac2-priv
+ping -c 3 ol9-19c-rac1
+ping -c 3 ol9-19c-rac1-priv
+ping -c 3 ol9-19c-rac2
+ping -c 3 ol9-19c-rac2-priv
 ```
 Check the SCAN address is still being resolved properly on both nodes.
 ```console
-# nslookup ol7-19c-scan
+# nslookup ol9-19c-scan
 Server:		192.168.56.1
 Address:	192.168.56.1#53
 
-Name:	ol7-19c-scan.localdomain
+Name:	ol9-19c-scan.localdomain
 Address: 192.168.56.105
 
 #
@@ -750,19 +750,22 @@ lrwxrwxrwx. 1 root root 7 Sep 18 08:19 /dev/oracleasm/asm-disk4 -> ../sde1
 ```
 Prior to 11gR2 we would probably use the "runcluvfy.sh" utility in the clusterware root directory to check the prerequisites have been met. If you are intending to configure SSH connectivity using the installer this check should be omitted as it will always fail. If you want to [setup SSH connectivity manually](https://oracle-base.com/articles/linux/user-equivalence-configuration-on-linux), then once it is done you can run the "runcluvfy.sh" with the following command.
 ```console
-/mountpoint/clusterware/runcluvfy.sh stage -pre crsinst -n ol7-19c-rac1,ol7-19c-rac2 -verbose
+/mountpoint/clusterware/runcluvfy.sh stage -pre crsinst -n ol9-19c-rac1,ol9-19c-rac2 -verbose
 ```
+
+For OpenSSH version 8 or later, the SSH equivalence during the OUI installer will fail for unsupported SSH key format. Manually setup SSH passwordless is necessary for a successfully installation.
+
 If you get any failures be sure to correct them before proceeding.
 The virtual machine setup is now complete.
 Before moving forward you should probably shut down your VMs and take snapshots of them. If any failures happen beyond this point it is probably better to switch back to those snapshots, clean up the shared drives and start the grid installation again. An alternative to [cleaning up the shared disks](https://oracle-base.com/articles/rac/clean-up-a-failed-grid-infrastructure-installation#asm_disks) is to back them up now using zip and just replace them in the event of a failure.
 ```console
 $ # Linux
-$ cd /u04/VirtualBox/ol7-19c-rac
+$ cd /u04/VirtualBox/ol9-19c-rac
 $ zip PreGrid.zip *.vdi
 
 Rem Windows
 C:
-cd C:\VirtualBox\ol7-19c-rac
+cd C:\VirtualBox\ol9-19c-rac
 zip PreGrid.zip *.vdi
 ```
 
@@ -786,8 +789,8 @@ cd /u01/app/19.0.0/grid/cv/rpm
 rpm -Uvh cvuqdisk*
 
 # Remote node.
-scp ./cvuqdisk* root@ol7-19c-rac2:/tmp
-ssh root@ol7-19c-rac2 rpm -Uvh /tmp/cvuqdisk*
+scp ./cvuqdisk* root@ol9-19c-rac2:/tmp
+ssh root@ol9-19c-rac2 rpm -Uvh /tmp/cvuqdisk*
 exit
 ```
 If you were planning on using the AFD Driver (the new ASMLib) you would configure the shared disks using the asmcmd command as shown below. We are using UDEV, so this is not necessary.
@@ -826,14 +829,15 @@ cd /u01/app/19.0.0/grid
 Instead, here's the interactive configuration.
 ```console
 cd /u01/app/19.0.0/grid
-./gridSetup.sh
+export ASSUME_DISTID=OL8
+./gridSetup.sh -applyRU <19.22 RU home>
 ```
 ![19c_RAC_install](./19c_RAC_install/Jietu20191119-184019@2x.jpg "Install the Grid Infrastructure")
 Select the "Configure Oracle Grid Infrastructure for a New Cluster" option, then click the "Next" button.
 ![19c_RAC_install](./19c_RAC_install/Jietu20191119-184049@2x.jpg "Install the Grid Infrastructure")
 Accept the "Configure an Oracle Standalone Cluster" option by clicking the "Next" button.
 
-Enter the cluster name "ol7-19c-cluster", SCAN name "ol7-19c-scan" and SCAN port "1521", then click the "Next" button.
+Enter the cluster name "ol9-19c-cluster", SCAN name "ol9-19c-scan" and SCAN port "1521", then click the "Next" button.
 ![19c_RAC_install](./19c_RAC_install/Jietu20191119-184214@2x.jpg "Install the Grid Infrastructure")
 On the "Cluster Node Information" screen, click the "Add" button.
 ![19c_RAC_install](./19c_RAC_install/Jietu20191119-184312@2x.jpg "Install the Grid Infrastructure")
@@ -869,19 +873,19 @@ When prompted, run the configuration scripts on each node.
 ![19c_RAC_install](./19c_RAC_install/Jietu20191119-190914@2x.jpg "Install the Grid Infrastructure")
 The output from the "orainstRoot.sh" file should look something like that listed below.
 ```console
-[root@ol7-19c-rac1 ~]# /u01/app/oraInventory/orainstRoot.sh 
+[root@ol9-19c-rac1 ~]# /u01/app/oraInventory/orainstRoot.sh 
 Changing permissions of /u01/app/oraInventory.
 Adding read,write permissions for group.
 Removing read,write,execute permissions for world.
 
 Changing groupname of /u01/app/oraInventory to oinstall.
 The execution of the script is complete.
-[root@ol7-19c-rac1 ~]#
+[root@ol9-19c-rac1 ~]#
 ```
 
 The output of the "root.sh" will vary a little depending on the node it is run on. Example output can be seen here.
 ```console
-[root@ol7-19c-rac1 ~]# /u01/app/19.0.0/grid/root.sh
+[root@ol9-19c-rac1 ~]# /u01/app/19.0.0/grid/root.sh
 Performing root user operation.
 
 The following environment variables are set as:
@@ -902,32 +906,32 @@ Now product-specific root actions will be performed.
 Relinking oracle with rac_on option
 Using configuration parameter file: /u01/app/19.0.0/grid/crs/install/crsconfig_params
 The log of current session can be found at:
-  /u01/app/oracle/crsdata/ol7-19c-rac1/crsconfig/rootcrs_ol7-19c-rac1_2019-11-19_06-10-11AM.log
-2019/11/19 06:10:25 CLSRSC-594: Executing installation step 1 of 19: 'SetupTFA'.
-2019/11/19 06:10:25 CLSRSC-594: Executing installation step 2 of 19: 'ValidateEnv'.
-2019/11/19 06:10:25 CLSRSC-363: User ignored prerequisites during installation
-2019/11/19 06:10:25 CLSRSC-594: Executing installation step 3 of 19: 'CheckFirstNode'.
-2019/11/19 06:10:27 CLSRSC-594: Executing installation step 4 of 19: 'GenSiteGUIDs'.
-2019/11/19 06:10:29 CLSRSC-594: Executing installation step 5 of 19: 'SetupOSD'.
-2019/11/19 06:10:29 CLSRSC-594: Executing installation step 6 of 19: 'CheckCRSConfig'.
-2019/11/19 06:10:30 CLSRSC-594: Executing installation step 7 of 19: 'SetupLocalGPNP'.
-2019/11/19 06:11:14 CLSRSC-594: Executing installation step 8 of 19: 'CreateRootCert'.
-2019/11/19 06:11:22 CLSRSC-594: Executing installation step 9 of 19: 'ConfigOLR'.
-2019/11/19 06:11:31 CLSRSC-4002: Successfully installed Oracle Trace File Analyzer (TFA) Collector.
-2019/11/19 06:11:46 CLSRSC-594: Executing installation step 10 of 19: 'ConfigCHMOS'.
-2019/11/19 06:11:46 CLSRSC-594: Executing installation step 11 of 19: 'CreateOHASD'.
-2019/11/19 06:11:55 CLSRSC-594: Executing installation step 12 of 19: 'ConfigOHASD'.
-2019/11/19 06:11:55 CLSRSC-330: Adding Clusterware entries to file 'oracle-ohasd.service'
-2019/11/19 06:12:20 CLSRSC-594: Executing installation step 13 of 19: 'InstallAFD'.
-2019/11/19 06:12:29 CLSRSC-594: Executing installation step 14 of 19: 'InstallACFS'.
-2019/11/19 06:12:37 CLSRSC-594: Executing installation step 15 of 19: 'InstallKA'.
-2019/11/19 06:12:45 CLSRSC-594: Executing installation step 16 of 19: 'InitConfig'.
+  /u01/app/oracle/crsdata/ol9-19c-rac1/crsconfig/rootcrs_ol9-19c-rac1_2024-2-13_06-10-11AM.log
+2024/2/13 06:10:25 CLSRSC-594: Executing installation step 1 of 19: 'SetupTFA'.
+2024/2/13 06:10:25 CLSRSC-594: Executing installation step 2 of 19: 'ValidateEnv'.
+2024/2/13 06:10:25 CLSRSC-363: User ignored prerequisites during installation
+2024/2/13 06:10:25 CLSRSC-594: Executing installation step 3 of 19: 'CheckFirstNode'.
+2024/2/13 06:10:27 CLSRSC-594: Executing installation step 4 of 19: 'GenSiteGUIDs'.
+2024/2/13 06:10:29 CLSRSC-594: Executing installation step 5 of 19: 'SetupOSD'.
+2024/2/13 06:10:29 CLSRSC-594: Executing installation step 6 of 19: 'CheckCRSConfig'.
+2024/2/13 06:10:30 CLSRSC-594: Executing installation step 7 of 19: 'SetupLocalGPNP'.
+2024/2/13 06:11:14 CLSRSC-594: Executing installation step 8 of 19: 'CreateRootCert'.
+2024/2/13 06:11:22 CLSRSC-594: Executing installation step 9 of 19: 'ConfigOLR'.
+2024/2/13 06:11:31 CLSRSC-4002: Successfully installed Oracle Trace File Analyzer (TFA) Collector.
+2024/2/13 06:11:46 CLSRSC-594: Executing installation step 10 of 19: 'ConfigCHMOS'.
+2024/2/13 06:11:46 CLSRSC-594: Executing installation step 11 of 19: 'CreateOHASD'.
+2024/2/13 06:11:55 CLSRSC-594: Executing installation step 12 of 19: 'ConfigOHASD'.
+2024/2/13 06:11:55 CLSRSC-330: Adding Clusterware entries to file 'oracle-ohasd.service'
+2024/2/13 06:12:20 CLSRSC-594: Executing installation step 13 of 19: 'InstallAFD'.
+2024/2/13 06:12:29 CLSRSC-594: Executing installation step 14 of 19: 'InstallACFS'.
+2024/2/13 06:12:37 CLSRSC-594: Executing installation step 15 of 19: 'InstallKA'.
+2024/2/13 06:12:45 CLSRSC-594: Executing installation step 16 of 19: 'InitConfig'.
 
 ASM has been created and started successfully.
 
 [DBT-30001] Disk groups created successfully. Check /u01/app/oracle/cfgtoollogs/asmca/asmca-191119AM061319.log for details.
 
-2019/11/19 06:14:25 CLSRSC-482: Running command: '/u01/app/19.0.0/grid/bin/ocrconfig -upgrade oracle oinstall'
+2024/2/13 06:14:25 CLSRSC-482: Running command: '/u01/app/19.0.0/grid/bin/ocrconfig -upgrade oracle oinstall'
 CRS-4256: Updating the profile
 Successful addition of voting disk 82896a1404774fa1bf7404bea502e526.
 Successfully replaced voting disk group with +DATA.
@@ -937,19 +941,19 @@ CRS-4266: Voting file(s) successfully replaced
 --  -----    -----------------                --------- ---------
  1. ONLINE   82896a1404774fa1bf7404bea502e526 (/dev/sdb1) [DATA]
 Located 1 voting disk(s).
-2019/11/19 06:16:33 CLSRSC-594: Executing installation step 17 of 19: 'StartCluster'.
-2019/11/19 06:18:09 CLSRSC-343: Successfully started Oracle Clusterware stack
-2019/11/19 06:18:09 CLSRSC-594: Executing installation step 18 of 19: 'ConfigNode'.
-2019/11/19 06:22:17 CLSRSC-594: Executing installation step 19 of 19: 'PostConfig'.
-2019/11/19 06:23:13 CLSRSC-325: Configure Oracle Grid Infrastructure for a Cluster ... succeeded
-[root@ol7-19c-rac1 ~]# su - oracle
+2024/2/13 06:16:33 CLSRSC-594: Executing installation step 17 of 19: 'StartCluster'.
+2024/2/13 06:18:09 CLSRSC-343: Successfully started Oracle Clusterware stack
+2024/2/13 06:18:09 CLSRSC-594: Executing installation step 18 of 19: 'ConfigNode'.
+2024/2/13 06:22:17 CLSRSC-594: Executing installation step 19 of 19: 'PostConfig'.
+2024/2/13 06:23:13 CLSRSC-325: Configure Oracle Grid Infrastructure for a Cluster ... succeeded
+[root@ol9-19c-rac1 ~]# su - oracle
 Last login: Tue Nov 19 06:23:11 EST 2019 on pts/1
-ss[oracle@ol7-19c-rac1 ~]$ ssh ol7-19c-rac2
-Last login: Tue Nov 19 06:09:27 2019 from ol7-19c-rac1
-[oracle@ol7-19c-rac2 ~]$ su - 
+ss[oracle@ol9-19c-rac1 ~]$ ssh ol9-19c-rac2
+Last login: Tue Nov 19 06:09:27 2019 from ol9-19c-rac1
+[oracle@ol9-19c-rac2 ~]$ su - 
 Password: 
 Last login: Tue Nov 19 06:09:30 EST 2019 on pts/1
-[root@ol7-19c-rac2 ~]# /u01/app/19.0.0/grid/root.sh
+[root@ol9-19c-rac2 ~]# /u01/app/19.0.0/grid/root.sh
 Performing root user operation.
 
 The following environment variables are set as:
@@ -970,14 +974,14 @@ Now product-specific root actions will be performed.
 Relinking oracle with rac_on option
 Using configuration parameter file: /u01/app/19.0.0/grid/crs/install/crsconfig_params
 The log of current session can be found at:
-  /u01/app/oracle/crsdata/ol7-19c-rac2/crsconfig/rootcrs_ol7-19c-rac2_2019-11-19_06-24-56AM.log
-2019/11/19 06:25:07 CLSRSC-594: Executing installation step 1 of 19: 'SetupTFA'.
-2019/11/19 06:25:07 CLSRSC-594: Executing installation step 2 of 19: 'ValidateEnv'.
-2019/11/19 06:25:07 CLSRSC-363: User ignored prerequisites during installation
-2019/11/19 06:25:07 CLSRSC-594: Executing installation step 3 of 19: 'CheckFirstNode'.
-2019/11/19 06:25:09 CLSRSC-594: Executing installation step 4 of 19: 'GenSiteGUIDs'.
-2019/11/19 06:25:10 CLSRSC-594: Executing installation step 5 of 19: 'SetupOSD'.
-2019/11/19 06:25:10 CLSRSC-594: Executing installation step 6 of 19: 'CheckCRSConfig'.
+  /u01/app/oracle/crsdata/ol9-19c-rac2/crsconfig/rootcrs_ol7-19c-rac2_2019-11-19_06-24-56AM.log
+2024/2/13 06:25:07 CLSRSC-594: Executing installation step 1 of 19: 'SetupTFA'.
+2024/2/13 06:25:07 CLSRSC-594: Executing installation step 2 of 19: 'ValidateEnv'.
+2024/2/13 06:25:07 CLSRSC-363: User ignored prerequisites during installation
+2024/2/13 06:25:07 CLSRSC-594: Executing installation step 3 of 19: 'CheckFirstNode'.
+2024/2/13 06:25:09 CLSRSC-594: Executing installation step 4 of 19: 'GenSiteGUIDs'.
+2024/2/13 06:25:10 CLSRSC-594: Executing installation step 5 of 19: 'SetupOSD'.
+2024/2/13 06:25:10 CLSRSC-594: Executing installation step 6 of 19: 'CheckCRSConfig'.
 2019/11/19 06:25:11 CLSRSC-594: Executing installation step 7 of 19: 'SetupLocalGPNP'.
 2019/11/19 06:25:14 CLSRSC-594: Executing installation step 8 of 19: 'CreateRootCert'.
 2019/11/19 06:25:14 CLSRSC-594: Executing installation step 9 of 19: 'ConfigOLR'.
@@ -998,7 +1002,7 @@ The log of current session can be found at:
 [root@ol7-19c-rac2 ~]#
 ```
 
-Once the scripts have completed, return to the "Execute Configuration Scripts" screen on "ol7-19c-rac1" and click the "OK" button.
+Once the scripts have completed, return to the "Execute Configuration Scripts" screen on "ol9-19c-rac1" and click the "OK" button.
 
 Wait for the configuration assistants to complete.
 ![19c_RAC_install](./19c_RAC_install/Jietu20191119-193235@2x.jpg "Install the Grid Infrastructure")
@@ -1010,24 +1014,24 @@ Click the "Close" button to exit the installer.
 ![19c_RAC_install](./19c_RAC_install/Jietu20191119-193620@2x.jpg "Install the Grid Infrastructure")
 The grid infrastructure installation is now complete. We can check the status of the installation using the following commands.
 ```console
-[root@ol7-19c-rac1 ~]# /u01/app/19.0.0/grid/bin/crsctl stat res -t
+[root@ol9-19c-rac1 ~]# /u01/app/19.0.0/grid/bin/crsctl stat res -t
 --------------------------------------------------------------------------------
 Name           Target  State        Server                   State details       
 --------------------------------------------------------------------------------
 Local Resources
 --------------------------------------------------------------------------------
 ora.LISTENER.lsnr
-               ONLINE  ONLINE       ol7-19c-rac1             STABLE
-               ONLINE  ONLINE       ol7-19c-rac2             STABLE
+               ONLINE  ONLINE       ol9-19c-rac1             STABLE
+               ONLINE  ONLINE       ol9-19c-rac2             STABLE
 ora.chad
-               ONLINE  ONLINE       ol7-19c-rac1             STABLE
-               ONLINE  ONLINE       ol7-19c-rac2             STABLE
+               ONLINE  ONLINE       ol9-19c-rac1             STABLE
+               ONLINE  ONLINE       ol9-19c-rac2             STABLE
 ora.net1.network
-               ONLINE  ONLINE       ol7-19c-rac1             STABLE
-               ONLINE  ONLINE       ol7-19c-rac2             STABLE
+               ONLINE  ONLINE       ol9-19c-rac1             STABLE
+               ONLINE  ONLINE       ol9-19c-rac2             STABLE
 ora.ons
-               ONLINE  ONLINE       ol7-19c-rac1             STABLE
-               ONLINE  ONLINE       ol7-19c-rac2             STABLE
+               ONLINE  ONLINE       ol9-19c-rac1             STABLE
+               ONLINE  ONLINE       ol9-19c-rac2             STABLE
 --------------------------------------------------------------------------------
 Cluster Resources
 --------------------------------------------------------------------------------
@@ -1065,12 +1069,12 @@ ora.scan1.vip
 
 At this point it is probably a good idea to shutdown both VMs and take snapshots. Remember to make a fresh zip of the ASM disks on the host machine, which you will need to restore if you revert to the post-grid snapshots.
 ```console
-$ cd /u04/VirtualBox/ol7-19c-rac
+$ cd /u04/VirtualBox/ol9-19c-rac
 $ zip PostGrid.zip *.vdi
 ```
 
 ## Install the Database Software
-Make sure the "ol7-19c-rac1" and "ol7-19c-rac2" virtual machines are started, then login to "ol7-19c-rac1" as the oracle user and unzip the database software to target directory on the first node. Don’t do this on the second node.
+Make sure the "ol9-19c-rac1" and "ol9-19c-rac2" virtual machines are started, then login to "ol9-19c-rac1" as the oracle user and unzip the database software to target directory on the first node. Don’t do this on the second node.
 ```console
 unzip -d /u01/app/oracle/product/19.0.0/db_1 V982063-01.zip
 ```
@@ -1108,12 +1112,12 @@ Click the "Close" button to exit the installer.
 ![19c_RAC_install](./19c_RAC_install/Jietu20191119-200437@2x.jpg "Install the Database Software")
 Shutdown both VMs and take snapshots. Remember to make a fresh zip of the ASM disks on the host machine, which you will need to restore if you revert to the post-db snapshots.
 ```console
-$ cd /u04/VirtualBox/ol7-19c-rac
+$ cd /u04/VirtualBox/ol9-19c-rac
 $ zip PostDB.zip *.vdi
 ```
 
 ## Create a Database
-Make sure the "ol7-19c-rac1" and "ol7-19c-rac2" virtual machines are started, then login to "ol7-19c-rac1" as the oracle user and start the Database Creation Asistant (DBCA).
+Make sure the "ol9-19c-rac1" and "ol9-19c-rac2" virtual machines are started, then login to "ol7-19c-rac1" as the oracle user and start the Database Creation Asistant (DBCA).
 ```console
 $ db_env
 $ dbca
@@ -1161,8 +1165,8 @@ The RAC database creation is now complete.
 ## Check the Status of the RAC
 There are several ways to check the status of the RAC. The srvctl utility shows the current configuration and status of the RAC database.
 ```console
-[oracle@ol7-19c-rac1 cdbrac]$ grid_env
-[oracle@ol7-19c-rac1 cdbrac]$ srvctl config database -d cdbrac
+[oracle@ol9-19c-rac1 cdbrac]$ grid_env
+[oracle@ol9-19c-rac1 cdbrac]$ srvctl config database -d cdbrac
 Database unique name: cdbrac
 Database name: cdbrac
 Oracle home: /u01/app/oracle/product/19.0.0/db_1
@@ -1184,21 +1188,21 @@ Stop concurrency:
 OSDBA group: dba
 OSOPER group: 
 Database instances: cdbrac1,cdbrac2
-Configured nodes: ol7-19c-rac1,ol7-19c-rac2
+Configured nodes: ol9-19c-rac1,ol9-19c-rac2
 CSS critical: no
 CPU count: 0
 Memory target: 0
 Maximum memory: 0
 Default network number for database services: 
 Database is administrator managed
-[oracle@ol7-19c-rac1 cdbrac]$ srvctl status database -d cdbrac
-Instance cdbrac1 is running on node ol7-19c-rac1
-Instance cdbrac2 is running on node ol7-19c-rac2
-[oracle@ol7-19c-rac1 cdbrac]$
+[oracle@ol9-19c-rac1 cdbrac]$ srvctl status database -d cdbrac
+Instance cdbrac1 is running on node ol9-19c-rac1
+Instance cdbrac2 is running on node ol9-19c-rac2
+[oracle@ol9-19c-rac1 cdbrac]$
 ```
 The V$ACTIVE_INSTANCES view can also display the current status of the instances.
 ```console
-[oracle@ol7-19c-rac1 cdbrac]$ sqlplus / as sysdba
+[oracle@ol9-19c-rac1 cdbrac]$ sqlplus / as sysdba
 
 SQL*Plus: Release 19.0.0.0.0 - Production on Tue Nov 19 10:34:25 2019
 Version 19.3.0.0.0
@@ -1214,8 +1218,8 @@ SQL> SELECT inst_name FROM v$active_instances;
 
 INST_NAME
 --------------------------------------------------------------------------------
-ol7-19c-rac1:cdbrac1
-ol7-19c-rac2:cdbrac2
+ol9-19c-rac1:cdbrac1
+ol9-19c-rac2:cdbrac2
 
 SQL>
 ```
