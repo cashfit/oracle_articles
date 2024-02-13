@@ -1,6 +1,6 @@
 # Oracle Database 19c RAC On Oracle Linux 9 Using VirtualBox
 
-**Last update 2024-2-14, published on 2024-2-13**
+**Last update 2024-2-14, first published 2024-2-13**
 
 This article describes the installation of Oracle Database 19c RAC on Linux (Oracle Linux 9.3 64-bit) using VirtualBox (7.0.12) with no additional shared disk devices.
 
@@ -129,7 +129,7 @@ If you plan to use the "oracle-database-preinstall-19c" package to perform all y
 ```
 
 > [!Caution]
-> You may need download the rpm package from [Oracle public YUM server](https://yum.oracle.com/repo/OracleLinux/OL9/appstream/x86_64/getPackage/oracle-database-preinstall-19c-1.0-1.el9.x86_64.rpm) before install it manually.
+> You may need download the rpm package from [Oracle public YUM server](https://yum.oracle.com/repo/OracleLinux/OL9/appstream/x86_64/getPackage/oracle-database-preinstall-19c-1.0-1.el9.x86_64.rpm) before install it manually.   
 > If you didn't check the "Allow root SSH login with password" flag while setting the root password during installation of Oracle Linux 9, then you can enable it by edit the /etc/ssh/sshd_config file and set the PermitRootLogin to yes. Remember restarting the sshd service to make it effect.
 
 Earlier versions of Oracle Linux required manual setup of the Yum repository by following the instructions at http://public-yum.oracle.com.
