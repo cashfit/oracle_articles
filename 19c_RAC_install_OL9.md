@@ -181,40 +181,45 @@ oracle   soft   memlock    134217728
 
 In addition to the basic OS installation, the following packages must be installed whilst logged in as the root user. This includes the 64-bit and 32-bit versions of some packages.
 ```console
-# From Public Yum or ULN
-yum install -y bc    
-yum install -y binutils
-yum install -y compat-libcap1
-yum install -y compat-libstdc++
-yum install -y elfutils-libelf
-yum install -y elfutils-libelf-devel
-yum install -y fontconfig-devel
-yum install -y glibc
-yum install -y glibc-devel
-yum install -y ksh
-yum install -y libaio
-yum install -y libaio-devel
-yum install -y libdtrace-ctf-devel
-yum install -y libXrender
-yum install -y libXrender-devel
-yum install -y libX11
-yum install -y libXau
-yum install -y libXi
-yum install -y libXtst
-yum install -y libgcc
-yum install -y libstdc++
-yum install -y libstdc++-devel
-yum install -y libxcb
-yum install -y make
-yum install -y net-tools # Clusterware
-yum install -y nfs-utils # ACFS
-yum install -y python # ACFS
-yum install -y python-configshell # ACFS
-yum install -y python-rtslib # ACFS
-yum install -y python-six # ACFS
-yum install -y targetcli # ACFS
-yum install -y smartmontools
-yum install -y sysstat
+# Install the latest released versions of the following packages:
+
+bc
+binutils
+compat-openssl11
+elfutils-libelf
+fontconfig
+glibc
+glibc-devel
+ksh
+libaio
+libasan
+liblsan
+libX11
+libXau
+libXi
+libXrender
+libXtst
+libxcrypt-compat
+libgcc
+libibverbs
+libnsl
+librdmacm
+libstdc++
+libxcb
+libvirt-libs
+make
+policycoreutils
+policycoreutils-python-utils
+smartmontools
+sysstat
+
+# Check status of all packages: 
+rpm -q bc binutils compat-openssl11 elfutils-libelf fontconfig glibc glibc-devel ksh libaio libasan liblsan \
+libX11 libXau libXi libXrender libXtst libxcrypt-compat libgcc libibverbs libnsl librdmacm libstdc++ \
+libxcb libvirt-libs make policycoreutils policycoreutils-python-utils smartmontools sysstat
+
+# Install the missing packages after preinstall package installed: 
+yum install compat-openssl11 libasan liblsan libvirt-libs -y
 ```
 
 Create the new groups and users.
