@@ -51,7 +51,7 @@ The package name will vary depending on the host distribution you are using. Onc
 We need to make sure a host-only network is configured and check/modify the IP range for that network. This will be the public network for our RAC installation.
 
 - Start VirtualBox from the menu.
-![19c_RAC_install](./19c_RAC_install_OL9/Screen\ Shot\ 2024-02-13\ at\ 22.45.38.png "VirtualBox Startup")
+[19c_RAC_install](<./19c_RAC_install_OL9/Screen Shot 2024-02-13 at 22.45.38.png> "VirtualBox Startup")
 - Select the "Tools" option, click "Network" in the pop out menu.
 ![19c_RAC_install](./19c_RAC_install_OL9/Screen Shot 2024-02-13 at 22.52.18.png "VirtualBox Network Setup")
 - Click the "Create" button on the right size of the screen. A network called "HostNetwork" will be created.
