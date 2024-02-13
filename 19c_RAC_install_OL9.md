@@ -71,7 +71,7 @@ If you can spread the virtual disks onto different physical disks, that will imp
 ![19c_RAC_install](<./19c_RAC_install_OL9/Screen Shot 2024-02-13 at 22.58.06.png> "Virtual Machine Setup")
 By clicking "Finish" button will complete the wizard of create a new virtual machine.
 ![19c_RAC_install](<./19c_RAC_install_OL9/Screen Shot 2024-02-13 at 22.58.40.png> "Virtual Machine Setup")
-The "ol9-19c-rac1" VM will appear on the left hand pane. Click on the "Settings" on the right side.
+The "ol9-19c-rac1" VM will appear on the left hand pane. Click on the "Settings" on the toolbar.
 ![19c_RAC_install](<./19c_RAC_install_OL9/Screen Shot 2024-02-13 at 22.58.51.png> "Virtual Machine Setup")
 Select "Network" section, and make sure "Adapter 1" is enabled, set to "NAT", then click on the "Adapter 2" tab.
 ![19c_RAC_install](<./19c_RAC_install_OL9/Screen Shot 2024-02-13 at 22.59.26.png> "Virtual Machine Setup")
@@ -111,9 +111,9 @@ When all packages installed and the installation complete by click "Reboot Syste
 ![19c_RAC_install](<./19c_RAC_install_OL9/Screen Shot 2024-02-14 at 00.16.01.png> "Guest Operating System Installation")
 
 To be consistent with the rest of the article, the following information should be set during the installation.
-- hostname: ol9-19c-rac1.localdomain
+- hostname: ol9-19c-rac1
 - enp0s3 (eth0): DHCP (Connect Automatically)
-- enp0s8 (eth1): IP=192.168.56.101, Subnet=255.255.255.0, Gateway=192.168.56.1, DNS=192.168.56.1, Search=localdomain (Connect Automatically)
+- enp0s8 (eth1): IP=192.168.56.101, Subnet=255.255.255.0, Gateway=192.168.56.1, DNS=<blank>, Search=<blank> (Connect Automatically)
 - enp0s9 (eth2): IP=192.168.1.101, Subnet=255.255.255.0, Gateway=<blank>, DNS=<blank>, Search=<blank> (Connect Automatically)
 
 You are free to change the IP addresses to suit your network, but remember to stay consistent with those adjustments throughout the rest of the article. Likewise, in this article I will refer to the network adapters as enp0s3, enp0s8 and enp0s9. In previous Linux versions they would have been eth0, eth1 and eth2 respectively.
@@ -126,6 +126,8 @@ If you plan to use the "oracle-database-preinstall-19c" package to perform all y
 ```console
 # yum localinstall -y oracle-database-preinstall-19c-1.0-1.el9.x86_64.rpm
 ```
+
+You may need download the rpm package from [Oracle public YUM server](https://yum.oracle.com/repo/OracleLinux/OL9/appstream/x86_64/getPackage/oracle-database-preinstall-19c-1.0-1.el9.x86_64.rpm) before install it manually.
 
 Earlier versions of Oracle Linux required manual setup of the Yum repository by following the instructions at http://public-yum.oracle.com.
  
