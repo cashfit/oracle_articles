@@ -135,14 +135,36 @@ If you plan to use the "oracle-database-preinstall-19c" package to perform all y
 Earlier versions of Oracle Linux required manual setup of the Yum repository by following the instructions at http://public-yum.oracle.com.
  
 It is probably worth doing a full update as well, but this is not strictly speaking necessary.
- ```console
- # yum update -y
- ```
+```console
+# yum update -y
+or
+# dnf update -y
+```
+
+### Create Local YUM source
+Delete or backup the .repo file in /etc/yum.repos.d directry including oracle-linux-ol9.repo, uek-ol9.repo, virt-ol9.repo.
+Create a new local.repo file as following:
+
+```console
+[local_server]
+name=This is a local repo
+baseurl=file:///run/media/root/OL-9-3-0-BaseOS-x86_64/AppStream
+enabled=1
+gpgcheck=0
+
+[baseos_server]
+name=This is a local repo
+baseurl=file:///run/media/root/OL-9-3-0-BaseOS-x86_64/BaseOS
+enabled=1
+gpgcheck=0
+```
+
+Execute `yum update` or `dnf update` to check the config works.
 
 ### Manual Setup
 If you have not used the "oracle-database-preinstall-19c" package to perform all prerequisites, you will need to manually perform the following setup tasks.
 
-Add the following lines to the "/etc/sysctl.conf" file, or in a file called "/etc/sysctl.d/98-oracle.conf".
+Add the following lines to the "/etc/sysctl.conf" file, or in a file called "/etc/sysctl.d/99-oracle-database-preinstall-19c-sysctl.conf".
 
 ```console
 fs.file-max = 6815744
@@ -164,10 +186,10 @@ Run the following command to change the current kernel parameters.
 ```console
 /sbin/sysctl -p
 # or
-/sbin/sysctl -p /etc/sysctl.d/98-oracle.conf
+/sbin/sysctl -p /etc/sysctl.d/99-oracle-database-preinstall-19c-sysctl.conf
 ```
 
-Add the following lines to a file called "/etc/security/limits.d/oracle-database-server-19c-preinstall.conf" file.
+Add the following lines to a file called "/etc/security/limits.d/oracle-database-preinstall-19c.conf" file.
 ```console
 oracle   soft   nofile    1024
 oracle   hard   nofile    65536
@@ -177,6 +199,8 @@ oracle   soft   stack    10240
 oracle   hard   stack    32768
 oracle   hard   memlock    134217728
 oracle   soft   memlock    134217728
+oracle   soft   data    unlimited
+oracle   hard   data    unlimited
 ```
 
 In addition to the basic OS installation, the following packages must be installed whilst logged in as the root user. This includes the 64-bit and 32-bit versions of some packages.
@@ -218,8 +242,70 @@ rpm -q bc binutils compat-openssl11 elfutils-libelf fontconfig glibc glibc-devel
 libX11 libXau libXi libXrender libXtst libxcrypt-compat libgcc libibverbs libnsl librdmacm libstdc++ \
 libxcb libvirt-libs make policycoreutils policycoreutils-python-utils smartmontools sysstat
 
+bc-1.07.1-14.el9.x86_64
+binutils-2.35.2-42.0.1.el9.x86_64
+package compat-openssl11 is not installed
+elfutils-libelf-0.189-3.el9.x86_64
+fontconfig-2.14.0-2.el9_1.x86_64
+glibc-2.34-83.0.1.el9_3.7.x86_64
+glibc-devel-2.34-83.0.1.el9_3.7.x86_64
+ksh-1.0.0~beta.1-3.0.1.el9.x86_64
+libaio-0.3.111-13.el9.x86_64
+package libasan is not installed
+package liblsan is not installed
+libX11-1.7.0-8.el9.x86_64
+libXau-1.0.9-8.el9.x86_64
+libXi-1.7.10-8.el9.x86_64
+libXrender-0.9.10-16.el9.x86_64
+libXtst-1.2.3-16.el9.x86_64
+libxcrypt-compat-4.4.18-3.el9.x86_64
+libgcc-11.4.1-2.1.0.1.el9.x86_64
+libibverbs-46.0-1.el9.x86_64
+libnsl-2.34-83.0.1.el9_3.7.x86_64
+package librdmacm is not installed
+libstdc++-11.4.1-2.1.0.1.el9.x86_64
+libxcb-1.13.1-9.el9.x86_64
+package libvirt-libs is not installed
+make-4.3-7.el9.x86_64
+policycoreutils-3.5-2.el9.x86_64
+policycoreutils-python-utils-3.5-2.el9.noarch
+smartmontools-7.2-7.el9.x86_64
+sysstat-12.5.4-7.0.1.el9.x86_64
+
 # Install the missing packages after preinstall package installed: 
-yum install compat-openssl11 libasan liblsan libvirt-libs -y
+yum install compat-openssl11 libasan liblsan librdmacm libvirt-libs -y
+
+# Check again to ensure all packages installed.
+[root@ol9-19c-rac1 limits.d]# rpm -q bc binutils compat-openssl11 elfutils-libelf fontconfig glibc glibc-devel ksh libaio libasan liblsan libX11 libXau libXi libXrender libXtst libxcrypt-compat libgcc libibverbs libnsl librdmacm libstdc++ libxcb libvirt-libs make policycoreutils policycoreutils-python-utils smartmontools sysstat
+bc-1.07.1-14.el9.x86_64
+binutils-2.35.2-42.0.1.el9.x86_64
+compat-openssl11-1.1.1k-4.0.1.el9_0.x86_64
+elfutils-libelf-0.189-3.el9.x86_64
+fontconfig-2.14.0-2.el9_1.x86_64
+glibc-2.34-83.0.1.el9_3.7.x86_64
+glibc-devel-2.34-83.0.1.el9_3.7.x86_64
+ksh-1.0.0~beta.1-3.0.1.el9.x86_64
+libaio-0.3.111-13.el9.x86_64
+libasan-11.4.1-2.1.0.1.el9.x86_64
+liblsan-11.4.1-2.1.0.1.el9.x86_64
+libX11-1.7.0-8.el9.x86_64
+libXau-1.0.9-8.el9.x86_64
+libXi-1.7.10-8.el9.x86_64
+libXrender-0.9.10-16.el9.x86_64
+libXtst-1.2.3-16.el9.x86_64
+libxcrypt-compat-4.4.18-3.el9.x86_64
+libgcc-11.4.1-2.1.0.1.el9.x86_64
+libibverbs-46.0-1.el9.x86_64
+libnsl-2.34-83.0.1.el9_3.7.x86_64
+librdmacm-46.0-1.el9.x86_64
+libstdc++-11.4.1-2.1.0.1.el9.x86_64
+libxcb-1.13.1-9.el9.x86_64
+libvirt-libs-9.5.0-7.0.1.el9_3.x86_64
+make-4.3-7.el9.x86_64
+policycoreutils-3.5-2.el9.x86_64
+policycoreutils-python-utils-3.5-2.el9.noarch
+smartmontools-7.2-7.el9.x86_64
+sysstat-12.5.4-7.0.1.el9.x86_64
 ```
 
 Create the new groups and users.
