@@ -18,4 +18,4 @@
 [Oracle7 Release 7.3.4](https://www.oracle.com/servers/technologies/oracle7.html){:target="_blank"}  
 
 
-(c) 2015, 2020, 2022 cashfit
+(c) 2015, 2020, 2024 cashfit
