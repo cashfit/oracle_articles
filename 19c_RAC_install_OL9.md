@@ -276,7 +276,9 @@ sysstat-12.5.4-7.0.1.el9.x86_64
 yum install compat-openssl11 libasan liblsan librdmacm libvirt-libs -y
 
 # Check again to ensure all packages installed.
-[root@ol9-19c-rac1 limits.d]# rpm -q bc binutils compat-openssl11 elfutils-libelf fontconfig glibc glibc-devel ksh libaio libasan liblsan libX11 libXau libXi libXrender libXtst libxcrypt-compat libgcc libibverbs libnsl librdmacm libstdc++ libxcb libvirt-libs make policycoreutils policycoreutils-python-utils smartmontools sysstat
+[root@ol9-19c-rac1 limits.d]# rpm -q bc binutils compat-openssl11 elfutils-libelf fontconfig glibc glibc-devel ksh libaio libasan liblsan \
+libX11 libXau libXi libXrender libXtst libxcrypt-compat libgcc libibverbs libnsl librdmacm libstdc++ \
+libxcb libvirt-libs make policycoreutils policycoreutils-python-utils smartmontools sysstat
 bc-1.07.1-14.el9.x86_64
 binutils-2.35.2-42.0.1.el9.x86_64
 compat-openssl11-1.1.1k-4.0.1.el9_0.x86_64
