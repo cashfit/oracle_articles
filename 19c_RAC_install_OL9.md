@@ -107,6 +107,8 @@ More specifically, it should be a server installation with a minimum of 4G+ swap
 ![19c_RAC_install](<./19c_RAC_install_OL9/Screen Shot 2024-02-13 at 23.15.49.png> "Guest Operating System Installation")
 ![19c_RAC_install](<./19c_RAC_install_OL9/Screen Shot 2024-02-13 at 23.16.36.png> "Guest Operating System Installation")
 ![19c_RAC_install](<./19c_RAC_install_OL9/Screen Shot 2024-02-13 at 23.17.46.png> "Guest Operating System Installation")
+When all packages installed and the installation complete by click "Reboot System".
+![19c_RAC_install](<./19c_RAC_install_OL9/Screen Shot 2024-02-14 at 00.16.01.png> "Guest Operating System Installation")
 
 To be consistent with the rest of the article, the following information should be set during the installation.
 - hostname: ol9-19c-rac1.localdomain
