@@ -1319,14 +1319,14 @@ The V$ACTIVE_INSTANCES view can also display the current status of the instances
 [oracle@ol9-19c-rac1 cdbrac]$ sqlplus / as sysdba
 
 SQL*Plus: Release 19.0.0.0.0 - Production on Tue Nov 19 10:34:25 2019
-Version 19.3.0.0.0
+Version 19.22.0.0.0
 
 Copyright (c) 1982, 2019, Oracle.  All rights reserved.
 
 
 Connected to:
 Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
-Version 19.3.0.0.0
+Version 19.22.0.0.0
 
 SQL> SELECT inst_name FROM v$active_instances;
 
