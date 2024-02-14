@@ -101,12 +101,19 @@ Continue through the Oracle Linux 9 installation as you would for a basic server
 ![19c_RAC_install](<./19c_RAC_install_OL9/Screen Shot 2024-02-13 at 23.06.05.png> "Guest Operating System Installation")
 More specifically, it should be a server installation with a minimum of 4G+ swap, firewall disabled, SELinux set to permissive and the following package groups installed: "Server with GUI"
 ![19c_RAC_install](<./19c_RAC_install_OL9/Screen Shot 2024-02-13 at 23.06.49.png> "Guest Operating System Installation")
+Manual partition the disk with adding swap space.
 ![19c_RAC_install](<./19c_RAC_install_OL9/Screen Shot 2024-02-13 at 23.09.49.png> "Guest Operating System Installation")
+Setting the 1st network adaptor.
 ![19c_RAC_install](<./19c_RAC_install_OL9/Screen Shot 2024-02-13 at 23.12.50.png> "Guest Operating System Installation")
+Setting the 2nd network adaptor.
 ![19c_RAC_install](<./19c_RAC_install_OL9/Screen Shot 2024-02-13 at 23.12.59.png> "Guest Operating System Installation")
+Setting the 3rd network adaptor.
 ![19c_RAC_install](<./19c_RAC_install_OL9/Screen Shot 2024-02-13 at 23.13.08.png> "Guest Operating System Installation")
+Select the software category.
 ![19c_RAC_install](<./19c_RAC_install_OL9/Screen Shot 2024-02-13 at 23.15.49.png> "Guest Operating System Installation")
+Setting the desired timezone.
 ![19c_RAC_install](<./19c_RAC_install_OL9/Screen Shot 2024-02-13 at 23.16.36.png> "Guest Operating System Installation")
+Then start the installation.
 ![19c_RAC_install](<./19c_RAC_install_OL9/Screen Shot 2024-02-13 at 23.17.46.png> "Guest Operating System Installation")
 When all packages installed and the installation complete by click "Reboot System".
 ![19c_RAC_install](<./19c_RAC_install_OL9/Screen Shot 2024-02-14 at 00.16.01.png> "Guest Operating System Installation")
