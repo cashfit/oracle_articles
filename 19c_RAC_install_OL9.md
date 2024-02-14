@@ -33,8 +33,8 @@ Download the following software.
 - Oracle 19c 19.22 RU from MOS
 - OPatch for 19c latest version from MOS
 
-> [!Caution]
-> This article has been updated for the 19c release and Oracle Linux 9 combination, but the installation is essentially unchanged since 12.2.0.1. Any variations specific for 19c and OL9 will be highlight.
+> :warning: **Warning**   
+This article has been updated for the 19c release and Oracle Linux 9 combination, but the installation is essentially unchanged since 12.2.0.1. Any variations specific for 19c and OL9 will be highlight.
 
 Depending on your minor version of VirtualBox and Oracle Linux, there may be some slight variation in how the screen shots look.
 
@@ -128,7 +128,7 @@ If you plan to use the "oracle-database-preinstall-19c" package to perform all y
 # yum localinstall -y oracle-database-preinstall-19c-1.0-1.el9.x86_64.rpm
 ```
 
-> [!Caution]
+> ❗ **Attention**
 > - You may need download the rpm package from [Oracle public YUM server](https://yum.oracle.com/repo/OracleLinux/OL9/appstream/x86_64/getPackage/oracle-database-preinstall-19c-1.0-1.el9.x86_64.rpm) before install it manually.   
 > - If you didn't check the "Allow root SSH login with password" flag while setting the root password during installation of Oracle Linux 9, then you can enable it by edit the /etc/ssh/sshd_config file and set the PermitRootLogin to yes. Remember restarting the sshd service to make it effect.
 
