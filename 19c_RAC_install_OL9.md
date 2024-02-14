@@ -357,7 +357,7 @@ passwd oracle
 
 Apart form the localhost address, the "/etc/hosts" file can be left blank, but I prefer to put the addresses in for reference.
 ```console
-127.0.0.1       localhost.localdomain   localhost
+127.0.0.1       localhost
 # Public
 192.168.56.101   ol9-19c-rac1
 192.168.56.102   ol9-19c-rac2
@@ -756,14 +756,16 @@ cd C:\VirtualBox\ol9-19c-rac
 Start the "ol9-19c-rac2" virtual machine by clicking the "Start" button on the toolbar. Ignore any network errors during the startup.
 
 Log in to the "ol9-19c-rac2" virtual machine as the "root" user so we can reconfigure the network settings to match the following.
-- hostname: ol9-19c-rac2.localdomain
+- hostname: ol9-19c-rac2
 - enp0s3 (eth0): DHCP (*Not* Connect Automatically)
-- enp0s8 (eth1): IP=192.168.56.102, Subnet=255.255.255.0, Gateway=192.168.56.1, DNS=192.168.56.1, Search=localdomain (Connect Automatically)
-- enp0s9 (eth2): IP=192.168.1.102, Subnet=255.255.255.0, Gateway=<blank>, DNS=<blank>, Search=<blank> (Connect Automatically)
+- enp0s8 (eth1): IP=192.168.56.102, Subnet=255.255.255.0, Gateway=192.168.56.1, DNS=\<blank\>, Search=\<blank\> (Connect Automatically)
+- enp0s9 (eth2): IP=192.168.1.102, Subnet=255.255.255.0, Gateway=\<blank\>, DNS=\<blank\>, Search=\<blank\> (Connect Automatically)
 
 Amend the hostname in the "/etc/hostname" file.
 ```console
 ol9-19c-rac2
+or
+# hostnamectl set-hostname ol9-19c-rac2
 ```
 Unlike previous Linux versions, we shouldn't have to edit the MAC address associated with the network adapters, but we will have to alter their IP addresses.
 
@@ -821,7 +823,7 @@ lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
 Edit the "/home/oracle/.bash_profile" file on the "ol9-19c-rac2" node to correct the ORACLE_SID and ORACLE_HOSTNAME values.
 ```console
 export ORACLE_SID=cdbrac2
-export ORACLE_HOSTNAME=ol9-19c-rac2.localdomain
+export ORACLE_HOSTNAME=ol9-19c-rac2
 ```
 Also, amend the ORACLE_SID setting in the "/home/oracle/db_env" and "/home/oracle/grid_env" files.
 
@@ -859,7 +861,8 @@ Prior to 11gR2 we would probably use the "runcluvfy.sh" utility in the clusterwa
 ```
 
 > ⚠️ **Warning**   
-> For OpenSSH version 8 or later, the SSH equivalence during the OUI installer will fail for unsupported SSH key format. Manually setup SSH passwordless is necessary for a successfully installation, with ssh-keygen -m pem option.
+> The SSH equivalence during the OUI installer will fail for unsupported SSH key format. OpenSSH v7.8 and higher generates RSA private keys by default in the OpenSSH format, instead of the previous default PEM format. The OpenSSH key format offers substantially better protection against offline password guessing and supports key comments in private keys.
+> Manually setup SSH passwordless is necessary for a successfully installation, with ssh-keygen -m pem option.
 
 If you get any failures be sure to correct them before proceeding.
 The virtual machine setup is now complete.
@@ -901,7 +904,7 @@ exit
 ```
 If you were planning on using the AFD Driver (the new ASMLib) you would configure the shared disks using the asmcmd command as shown below. We are using UDEV, so this is not necessary.
 
-> ⚠️ **Warning**
+> ⚠️ **Warning**   
 > 2024-2-14, at the moment of writing this article, ASMLib and AFD are not fully support Oracle Linux 9 kernel UEK 7.x, please do not use the feature.
 > If you insist using ASMLib and AFD, additional database patch is needed.
 
@@ -955,7 +958,7 @@ On the "Cluster Node Information" screen, click the "Add" button.
 ![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-184312@2x.png> "Install the Grid Infrastructure")
 Click "Test" button to test it once it is complete. Once the test is complete, click the "Next" button.
 
-> ⚠️ **Warning**
+> ⚠️ **Warning**   
 > the ssh equivalence setup will fail on this screen, please use manual method mentioned above, and just test it.
  
 Check the public and private networks are specified correctly. Make sure enp0s8 are used for "Public", enp0s9 are used for "ASM & Private", If the NAT interface is displayed, remember to mark it as "Do Not Use". Click the "Next" button.
@@ -964,7 +967,7 @@ Accept the "Use Oracle Flex ASM for storage" option by clicking the "Next" butto
 ![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-184858@2x.png> "Install the Grid Infrastructure")
 Select the "No" option, as we don't want to create a separate disk group for the GIMR in this case. Click the "Next" button.
 
-Set the redundancy to "External", click the "Change Discovery Path" button and set the path to "/dev/oracleasm/*". Return to the main screen and select all 4 disks. Uncheck the "Configure Oracle ASM Filter Driver" option, then click the "Next" button.
+Set the redundancy to "External", click the "Change Discovery Path" button and set the path to "/dev/oracleasm/*". Return to the main screen and select all 4 disks. **Uncheck** the "Configure Oracle ASM Filter Driver" option, then click the "Next" button.
 ![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-185004@2x.png> "Install the Grid Infrastructure")
 Enter the credentials and click the "Next" button.
 ![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-185024@2x.png> "Install the Grid Infrastructure")
