@@ -33,6 +33,8 @@ Download the following software.
 - Oracle 19c 19.22 RU from MOS
 - OPatch for 19c latest version from MOS
 
+::: warning
+
 > ⚠️ **Warning**   
 This article has been updated for the 19c release and Oracle Linux 9 combination, but the installation is essentially unchanged since 12.2.0.1. Any variations specific for 19c and OL9 will be highlight.
 
