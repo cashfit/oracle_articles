@@ -905,7 +905,7 @@ exit
 If you were planning on using the AFD Driver (the new ASMLib) you would configure the shared disks using the asmcmd command as shown below. We are using UDEV, so this is not necessary.
 
 > ⚠️ **Warning**   
-> 2024-2-14, at the moment of writing this article, ASMLib and AFD are not fully support Oracle Linux 9 kernel UEK 7.x, please do not use the feature.
+> 2024-2-14, at the moment of writing this article, ASMLib and AFD are not fully support Oracle Linux 9 kernel UEK 7.x, please do not use the feature.   
 > If you insist using ASMLib and AFD, additional database patch is needed.
 
 
@@ -947,48 +947,48 @@ cd /u01/app/19.0.0/grid
 export CV_ASSUME_DISTID=OL8
 ./gridSetup.sh -applyRU <19.22 RU home>
 ```
-![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-184019@2x.png> "Install the Grid Infrastructure")
+![19c_RAC_install](<./19c_RAC_install/Jietu20191119-184019@2x.png> "Install the Grid Infrastructure")
 Select the "Configure Oracle Grid Infrastructure for a New Cluster" option, then click the "Next" button.
-![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-184049@2x.png> "Install the Grid Infrastructure")
+![19c_RAC_install](<./19c_RAC_install/Jietu20191119-184049@2x.png> "Install the Grid Infrastructure")
 Accept the "Configure an Oracle Standalone Cluster" option by clicking the "Next" button.
 
 Enter the cluster name "ol9-19c-cluster", SCAN name "ol9-19c-scan" and SCAN port "1521", then click the "Next" button.
-![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-184214@2x.png> "Install the Grid Infrastructure")
+![19c_RAC_install](<./19c_RAC_install/Jietu20191119-184214@2x.png> "Install the Grid Infrastructure")
 On the "Cluster Node Information" screen, click the "Add" button.
-![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-184312@2x.png> "Install the Grid Infrastructure")
+![19c_RAC_install](<./19c_RAC_install/Jietu20191119-184312@2x.png> "Install the Grid Infrastructure")
 Click "Test" button to test it once it is complete. Once the test is complete, click the "Next" button.
 
 > ⚠️ **Warning**   
 > the ssh equivalence setup will fail on this screen, please use manual method mentioned above, and just test it.
  
 Check the public and private networks are specified correctly. Make sure enp0s8 are used for "Public", enp0s9 are used for "ASM & Private", If the NAT interface is displayed, remember to mark it as "Do Not Use". Click the "Next" button.
-![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-184917@2x.png> "Install the Grid Infrastructure")
+![19c_RAC_install](<./19c_RAC_install/Jietu20191119-184917@2x.png> "Install the Grid Infrastructure")
 Accept the "Use Oracle Flex ASM for storage" option by clicking the "Next" button.
-![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-184858@2x.png> "Install the Grid Infrastructure")
+![19c_RAC_install](<./19c_RAC_install/Jietu20191119-184858@2x.png> "Install the Grid Infrastructure")
 Select the "No" option, as we don't want to create a separate disk group for the GIMR in this case. Click the "Next" button.
 
 Set the redundancy to "External", click the "Change Discovery Path" button and set the path to "/dev/oracleasm/*". Return to the main screen and select all 4 disks. **Uncheck** the "Configure Oracle ASM Filter Driver" option, then click the "Next" button.
-![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-185004@2x.png> "Install the Grid Infrastructure")
+![19c_RAC_install](<./19c_RAC_install/Jietu20191119-185004@2x.png> "Install the Grid Infrastructure")
 Enter the credentials and click the "Next" button.
-![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-185024@2x.png> "Install the Grid Infrastructure")
+![19c_RAC_install](<./19c_RAC_install/Jietu20191119-185024@2x.png> "Install the Grid Infrastructure")
 Accept the default IPMI option by clicking the "Next" button.
-![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-185035@2x.png> "Install the Grid Infrastructure")
+![19c_RAC_install](<./19c_RAC_install/Jietu20191119-185035@2x.png> "Install the Grid Infrastructure")
 Don't register with EM. Click the "Next" button.
-![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-185045@2x.png> "Install the Grid Infrastructure")
+![19c_RAC_install](<./19c_RAC_install/Jietu20191119-185045@2x.png> "Install the Grid Infrastructure")
 We are using a single user and group manage both ASM add the database, so set the groups to "dba" and click the "Next" button. Accept the warnings on the subsequent dialog by clicking the "Yes" button.
-![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-185132@2x.png> "Install the Grid Infrastructure")
+![19c_RAC_install](<./19c_RAC_install/Jietu20191119-185132@2x.png> "Install the Grid Infrastructure")
 Enter the Oracle Base location "/u01/app/oracle" and click the "Next" button. We have already pre-created directories for the later database installation, so ignore the subsequent warning about the Oracle Base not being empty by clicking the "Yes" button.
-![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-185158@2x.png> "Install the Grid Infrastructure")
+![19c_RAC_install](<./19c_RAC_install/Jietu20191119-185158@2x.png> "Install the Grid Infrastructure")
 Accept the default inventory directory by clicking the "Next" button.
-![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-185518@2x.png> "Install the Grid Infrastructure")
+![19c_RAC_install](<./19c_RAC_install/Jietu20191119-185518@2x.png> "Install the Grid Infrastructure")
 Wait while the prerequisite checks complete. If you have any issues use the "Fix & Check Again" button. Once possible fixes are complete, check the "Ignore All" checkbox and click the "Next" button. It is likely the "Physical Memory" and "Network Time Protocol (NTP)" tests will fail for this type of installation. This is OK.
-![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-185737@2x.png> "Install the Grid Infrastructure")
+![19c_RAC_install](<./19c_RAC_install/Jietu20191119-185737@2x.png> "Install the Grid Infrastructure")
 By check "Ignore All" to proceed the installation.
 
 Wait while the installation takes place.
-![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-190342@2x.png> "Install the Grid Infrastructure")
+![19c_RAC_install](<./19c_RAC_install/Jietu20191119-190342@2x.png> "Install the Grid Infrastructure")
 When prompted, run the configuration scripts on each node.
-![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-190914@2x.png> "Install the Grid Infrastructure")
+![19c_RAC_install](<./19c_RAC_install/Jietu20191119-190914@2x.png> "Install the Grid Infrastructure")
 The output from the "orainstRoot.sh" file should look something like that listed below.
 ```console
 [root@ol9-19c-rac1 ~]# /u01/app/oraInventory/orainstRoot.sh 
@@ -1119,13 +1119,13 @@ The log of current session can be found at:
 Once the scripts have completed, return to the "Execute Configuration Scripts" screen on "ol9-19c-rac1" and click the "OK" button.
 
 Wait for the configuration assistants to complete.
-![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-193235@2x.png> "Install the Grid Infrastructure")
+![19c_RAC_install](<./19c_RAC_install/Jietu20191119-193235@2x.png> "Install the Grid Infrastructure")
 If any of the configuration steps fail you should check the specified log to see if the error is a show-stopper or not. 
 
 Provided you don't have any show-stoppers, it is safe to ignore the errors by clicking "Next" button.
-![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-193606@2x.png> "Install the Grid Infrastructure")
+![19c_RAC_install](<./19c_RAC_install/Jietu20191119-193606@2x.png> "Install the Grid Infrastructure")
 Click the "Close" button to exit the installer.
-![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-193620@2x.png> "Install the Grid Infrastructure")
+![19c_RAC_install](<./19c_RAC_install/Jietu20191119-193620@2x.png> "Install the Grid Infrastructure")
 The grid infrastructure installation is now complete. We can check the status of the installation using the following commands.
 ```console
 [root@ol9-19c-rac1 ~]# /u01/app/19.0.0/grid/bin/crsctl stat res -t
@@ -1199,31 +1199,31 @@ $ cd $ORACLE_HOME
 $ ./runInstaller
 ```
 Select the "Set Up Software Only" option, then click the "Next" button.
-![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-194047@2x.png> "Install the Database Software")
+![19c_RAC_install](<./19c_RAC_install/Jietu20191119-194047@2x.png> "Install the Database Software")
 Accept the "Oracle Real Application Clusters database installation" option by clicking the "Next" button.
-![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-194138@2x.png> "Install the Database Software")
+![19c_RAC_install](<./19c_RAC_install/Jietu20191119-194138@2x.png> "Install the Database Software")
 Make sure both nodes are selected, then click the "Next" button.
-![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-194210@2x.png> "Install the Database Software")
+![19c_RAC_install](<./19c_RAC_install/Jietu20191119-194210@2x.png> "Install the Database Software")
 Select the "Enterprise Edition" option, then click the "Next" button.
-![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-194630@2x.png> "Install the Database Software")
+![19c_RAC_install](<./19c_RAC_install/Jietu20191119-194630@2x.png> "Install the Database Software")
 Enter "/u01/app/oracle" as the Oracle base, then click the "Next" button.
-![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-194639@2x.png> "Install the Database Software")
+![19c_RAC_install](<./19c_RAC_install/Jietu20191119-194639@2x.png> "Install the Database Software")
 Select the desired operating system groups, then click the "Next" button. In this case we are only using the "dba" group.
-![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-194725@2x.png> "Install the Database Software")
+![19c_RAC_install](<./19c_RAC_install/Jietu20191119-194725@2x.png> "Install the Database Software")
 Accept the default options, and click "Next" button.
-![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-194734@2x.png> "Install the Database Software")
+![19c_RAC_install](<./19c_RAC_install/Jietu20191119-194734@2x.png> "Install the Database Software")
 Wait for the prerequisite check to complete. If there are any problems either click the "Fix & Check Again" button, or check the "Ignore All" checkbox and click the "Next" button.
-![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-195031@2x.png> "Install the Database Software")
+![19c_RAC_install](<./19c_RAC_install/Jietu20191119-195031@2x.png> "Install the Database Software")
 
-![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-195100@2x.png> "Install the Database Software")
+![19c_RAC_install](<./19c_RAC_install/Jietu20191119-195100@2x.png> "Install the Database Software")
 If you are happy with the summary information, click the "Install" button.
-![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-195114@2x.png> "Install the Database Software")
+![19c_RAC_install](<./19c_RAC_install/Jietu20191119-195114@2x.png> "Install the Database Software")
 Wait while the installation takes place.
-![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-195943@2x.png> "Install the Database Software")
+![19c_RAC_install](<./19c_RAC_install/Jietu20191119-195943@2x.png> "Install the Database Software")
 When prompted, run the configuration script on each node. When the scripts have been run on each node, click the "OK" button.
 
 Click the "Close" button to exit the installer.
-![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-200437@2x.png> "Install the Database Software")
+![19c_RAC_install](<./19c_RAC_install/Jietu20191119-200437@2x.png> "Install the Database Software")
 Shutdown both VMs and take snapshots. Remember to make a fresh zip of the ASM disks on the host machine, which you will need to restore if you revert to the post-db snapshots.
 ```console
 $ cd /u04/VirtualBox/ol9-19c-rac
@@ -1237,43 +1237,43 @@ $ db_env
 $ dbca
 ```
 Select the "Create Database" option and click the "Next" button.
-![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-200513@2x.png> "Create a Database")
+![19c_RAC_install](<./19c_RAC_install/Jietu20191119-200513@2x.png> "Create a Database")
 Select the "Advanced Mode" option. Click the "Next" button.
-![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-200545@2x.png> "Create a Database")
+![19c_RAC_install](<./19c_RAC_install/Jietu20191119-200545@2x.png> "Create a Database")
 Check the "Custom Database" option and click the "Next" button.
-![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-200603@2x.png> "Create a Database")
+![19c_RAC_install](<./19c_RAC_install/Jietu20191119-200603@2x.png> "Create a Database")
 Make sure both nodes are selected, then click the "Next" button.
-![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-200615@2x.png> "Create a Database")
+![19c_RAC_install](<./19c_RAC_install/Jietu20191119-200615@2x.png> "Create a Database")
 Enter the container database name (cdbrac), pluggable database name (pdb) and administrator password. Click the "Next" button.
-![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-200740@2x.png> "Create a Database")
+![19c_RAC_install](<./19c_RAC_install/Jietu20191119-200740@2x.png> "Create a Database")
 Accept the default values, and click "Next" button.
-![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-200818@2x.png> "Create a Database")
+![19c_RAC_install](<./19c_RAC_install/Jietu20191119-200818@2x.png> "Create a Database")
 Accept the default values, and click "Next" button.
-![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-200859@2x.png> "Create a Database")
+![19c_RAC_install](<./19c_RAC_install/Jietu20191119-200859@2x.png> "Create a Database")
 Accept the default values, and click "Next" button.
-![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-200942@2x.png> "Create a Database")
+![19c_RAC_install](<./19c_RAC_install/Jietu20191119-200942@2x.png> "Create a Database")
 Accept the default values, and click "Next" button.
-![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-201022@2x.png> "Create a Database")
+![19c_RAC_install](<./19c_RAC_install/Jietu20191119-201022@2x.png> "Create a Database")
 
-![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-201044@2x.png> "Create a Database")
+![19c_RAC_install](<./19c_RAC_install/Jietu20191119-201044@2x.png> "Create a Database")
 Deselect the CVU and EM options, and click "Next" button.
-![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-201119@2x.png> "Create a Database")
+![19c_RAC_install](<./19c_RAC_install/Jietu20191119-201119@2x.png> "Create a Database")
 Enter dba password, and click "Next" button.
-![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-201137@2x.png> "Create a Database")
+![19c_RAC_install](<./19c_RAC_install/Jietu20191119-201137@2x.png> "Create a Database")
 
-![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-201149@2x.png> "Create a Database")
+![19c_RAC_install](<./19c_RAC_install/Jietu20191119-201149@2x.png> "Create a Database")
 
-![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-201216@2x.png> "Create a Database")
+![19c_RAC_install](<./19c_RAC_install/Jietu20191119-201216@2x.png> "Create a Database")
 
-![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-201309@2x.png> "Create a Database")
+![19c_RAC_install](<./19c_RAC_install/Jietu20191119-201309@2x.png> "Create a Database")
 Select "Ignore All", and click "Next" button.
-![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-201424@2x.png> "Create a Database")
+![19c_RAC_install](<./19c_RAC_install/Jietu20191119-201424@2x.png> "Create a Database")
 If you are happy with the summary information, click the "Finish" button.
-![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-201435@2x.png> "Create a Database")
+![19c_RAC_install](<./19c_RAC_install/Jietu20191119-201435@2x.png> "Create a Database")
 Wait while the database creation takes place.
-![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-202201@2x.png> "Create a Database")
+![19c_RAC_install](<./19c_RAC_install/Jietu20191119-202201@2x.png> "Create a Database")
 If you want to modify passwords, click the "Password Management" button. When finished, click the "Close" button.
-![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-233237@2x.png> "Create a Database")
+![19c_RAC_install](<./19c_RAC_install/Jietu20191119-233237@2x.png> "Create a Database")
 The RAC database creation is now complete.
 
 ## Check the Status of the RAC
