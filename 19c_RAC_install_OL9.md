@@ -33,7 +33,7 @@ Download the following software.
 - Oracle 19c 19.22 RU from MOS
 - OPatch for 19c latest version from MOS
 
-> :warning: **Warning**   
+> ⚠️ **Warning**   
 This article has been updated for the 19c release and Oracle Linux 9 combination, but the installation is essentially unchanged since 12.2.0.1. Any variations specific for 19c and OL9 will be highlight.
 
 Depending on your minor version of VirtualBox and Oracle Linux, there may be some slight variation in how the screen shots look.
@@ -114,8 +114,8 @@ When all packages installed and the installation complete by click "Reboot Syste
 To be consistent with the rest of the article, the following information should be set during the installation.
 - hostname: ol9-19c-rac1
 - enp0s3 (eth0): DHCP (Connect Automatically)
-- enp0s8 (eth1): IP=192.168.56.101, Subnet=255.255.255.0, Gateway=192.168.56.1, DNS=<blank>, Search=<blank> (Connect Automatically)
-- enp0s9 (eth2): IP=192.168.1.101, Subnet=255.255.255.0, Gateway=<blank>, DNS=<blank>, Search=<blank> (Connect Automatically)
+- enp0s8 (eth1): IP=192.168.56.101, Subnet=255.255.255.0, Gateway=192.168.56.1, DNS=\<blank\>, Search=\<blank\> (Connect Automatically)
+- enp0s9 (eth2): IP=192.168.1.101, Subnet=255.255.255.0, Gateway=\<blank\>, DNS=\<blank\>, Search=\<blank\> (Connect Automatically)
 
 You are free to change the IP addresses to suit your network, but remember to stay consistent with those adjustments throughout the rest of the article. Likewise, in this article I will refer to the network adapters as enp0s3, enp0s8 and enp0s9. In previous Linux versions they would have been eth0, eth1 and eth2 respectively.
 
@@ -128,7 +128,7 @@ If you plan to use the "oracle-database-preinstall-19c" package to perform all y
 # yum localinstall -y oracle-database-preinstall-19c-1.0-1.el9.x86_64.rpm
 ```
 
-> ❗ **Attention**
+> ⚠️ **Warning**   
 > - You may need download the rpm package from [Oracle public YUM server](https://yum.oracle.com/repo/OracleLinux/OL9/appstream/x86_64/getPackage/oracle-database-preinstall-19c-1.0-1.el9.x86_64.rpm) before install it manually.   
 > - If you didn't check the "Allow root SSH login with password" flag while setting the root password during installation of Oracle Linux 9, then you can enable it by edit the /etc/ssh/sshd_config file and set the PermitRootLogin to yes. Remember restarting the sshd service to make it effect.
 
