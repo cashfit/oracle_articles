@@ -439,18 +439,13 @@ Address: 192.168.56.105
 #
 ```
 
-Amend the "/etc/security/limits.d/90-nproc.conf" file as described below. See [MOS Note [ID 1487773.1]](https://support.oracle.com/epmos/faces/DocContentDisplay?id=1487773.1)
-```console
-# Change this
-*          soft    nproc    1024
-
-# To this
-* - nproc 16384
-```
-
 Change the setting of SELinux to permissive by editing the "/etc/selinux/config" file, making sure the SELINUX flag is set as follows.
 ```console
 SELINUX=permissive
+or 
+SELINUX=disabled
+or
+sed -i -e "s|SELINUX=enforcing|SELINUX=permissive|g" /etc/selinux/config
 ```
 
 If you have the Linux firewall enabled, you will need to disable or configure it, as shown [here](https://oracle-base.com/articles/linux/oracle-linux-6-installation#firewall) or [here](https://oracle-base.com/articles/linux/linux-firewall#installation). The following is an example of disabling the firewall.
@@ -648,7 +643,12 @@ Calling ioctl() to re-read partition table.
 Syncing disks.
 #
 ```
+
 In each case, the sequence of answers is "n", "p", "1", "Return", "Return" and "w".
+```console
+echo -e "n\np\n1\n\n\nw" | fdisk /dev/sdb
+```
+
 Once all the disks are partitioned, the results can be seen by repeating the previous "ls" command.
 ```console
 # cd /dev
@@ -763,7 +763,7 @@ Log in to the "ol9-19c-rac2" virtual machine as the "root" user so we can reconf
 
 Amend the hostname in the "/etc/hostname" file.
 ```console
-ol9-19c-rac2.localdomain
+ol9-19c-rac2
 ```
 Unlike previous Linux versions, we shouldn't have to edit the MAC address associated with the network adapters, but we will have to alter their IP addresses.
 
@@ -858,7 +858,8 @@ Prior to 11gR2 we would probably use the "runcluvfy.sh" utility in the clusterwa
 /mountpoint/clusterware/runcluvfy.sh stage -pre crsinst -n ol9-19c-rac1,ol9-19c-rac2 -verbose
 ```
 
-For OpenSSH version 8 or later, the SSH equivalence during the OUI installer will fail for unsupported SSH key format. Manually setup SSH passwordless is necessary for a successfully installation, with ssh-keygen -m pem option.
+> ⚠️ **Warning**   
+> For OpenSSH version 8 or later, the SSH equivalence during the OUI installer will fail for unsupported SSH key format. Manually setup SSH passwordless is necessary for a successfully installation, with ssh-keygen -m pem option.
 
 If you get any failures be sure to correct them before proceeding.
 The virtual machine setup is now complete.
@@ -880,7 +881,7 @@ Make sure both virtual machines are started. The GI is now an image installation
 ```console
 export SOFTWARE_LOCATION=/media/sf_19.0.0/
 cd /u01/app/19.0.0/grid
-unzip -q $SOFTWARE_LOCATION/linuxx64_1900_grid_home.zip
+unzip -qq $SOFTWARE_LOCATION/linuxx64_1900_grid_home.zip
 ```
 or unzip the grid software to target directory on the first node. Don’t do this on the second node.
 ```console
@@ -899,6 +900,12 @@ ssh root@ol9-19c-rac2 rpm -Uvh /tmp/cvuqdisk*
 exit
 ```
 If you were planning on using the AFD Driver (the new ASMLib) you would configure the shared disks using the asmcmd command as shown below. We are using UDEV, so this is not necessary.
+
+> ⚠️ **Warning**
+> 2024-2-14, at the moment of writing this article, ASMLib and AFD are not fully support Oracle Linux 9 kernel UEK 7.x, please do not use the feature.
+> If you insist using ASMLib and AFD, additional database patch is needed.
+
+
 ```console
 # !!!! I did not do this! !!!!
 su -
@@ -934,7 +941,7 @@ cd /u01/app/19.0.0/grid
 Instead, here's the interactive configuration.
 ```console
 cd /u01/app/19.0.0/grid
-export ASSUME_DISTID=OL8
+export CV_ASSUME_DISTID=OL8
 ./gridSetup.sh -applyRU <19.22 RU home>
 ```
 ![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-184019@2x.png> "Install the Grid Infrastructure")
@@ -946,9 +953,12 @@ Enter the cluster name "ol9-19c-cluster", SCAN name "ol9-19c-scan" and SCAN port
 ![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-184214@2x.png> "Install the Grid Infrastructure")
 On the "Cluster Node Information" screen, click the "Add" button.
 ![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-184312@2x.png> "Install the Grid Infrastructure")
-Click the "SSH Connectivity..." button and enter the password for the "oracle" user. Click the "Setup" button to configure SSH connectivity, and the "Test" button to test it once it is complete. Once the test is complete, click the "Next" button.
+Click "Test" button to test it once it is complete. Once the test is complete, click the "Next" button.
 
-Check the public and private networks are specified correctly. Make sure enp0s9 are used for “ASM & Private”, If the NAT interface is displayed, remember to mark it as "Do Not Use". Click the "Next" button.
+> ⚠️ **Warning**
+> the ssh equivalence setup will fail on this screen, please use manual method mentioned above, and just test it.
+ 
+Check the public and private networks are specified correctly. Make sure enp0s8 are used for "Public", enp0s9 are used for "ASM & Private", If the NAT interface is displayed, remember to mark it as "Do Not Use". Click the "Next" button.
 ![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-184917@2x.png> "Install the Grid Infrastructure")
 Accept the "Use Oracle Flex ASM for storage" option by clicking the "Next" button.
 ![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-184858@2x.png> "Install the Grid Infrastructure")
@@ -970,7 +980,7 @@ Accept the default inventory directory by clicking the "Next" button.
 ![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-185518@2x.png> "Install the Grid Infrastructure")
 Wait while the prerequisite checks complete. If you have any issues use the "Fix & Check Again" button. Once possible fixes are complete, check the "Ignore All" checkbox and click the "Next" button. It is likely the "Physical Memory" and "Network Time Protocol (NTP)" tests will fail for this type of installation. This is OK.
 ![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-185737@2x.png> "Install the Grid Infrastructure")
-By check “Ignore All” to proceed the installation.
+By check "Ignore All" to proceed the installation.
 
 Wait while the installation takes place.
 ![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-190342@2x.png> "Install the Grid Infrastructure")
@@ -998,12 +1008,10 @@ The following environment variables are set as:
     ORACLE_HOME=  /u01/app/19.0.0/grid
 
 Enter the full pathname of the local bin directory: [/usr/local/bin]: 
-   Copying dbhome to /usr/local/bin ...
-   Copying oraenv to /usr/local/bin ...
-   Copying coraenv to /usr/local/bin ...
+The contents of "dbhome" have not changed. No need to overwrite.
+The contents of "oraenv" have not changed. No need to overwrite.
+The contents of "coraenv" have not changed. No need to overwrite.
 
-
-Creating /etc/oratab file...
 Entries will be added to the /etc/oratab file as needed by
 Database Configuration Assistant when a database is created
 Finished running generic part of root script.
@@ -1011,46 +1019,44 @@ Now product-specific root actions will be performed.
 Relinking oracle with rac_on option
 Using configuration parameter file: /u01/app/19.0.0/grid/crs/install/crsconfig_params
 The log of current session can be found at:
-  /u01/app/oracle/crsdata/ol9-19c-rac1/crsconfig/rootcrs_ol9-19c-rac1_2024-2-13_06-10-11AM.log
-2024/2/13 06:10:25 CLSRSC-594: Executing installation step 1 of 19: 'SetupTFA'.
-2024/2/13 06:10:25 CLSRSC-594: Executing installation step 2 of 19: 'ValidateEnv'.
-2024/2/13 06:10:25 CLSRSC-363: User ignored prerequisites during installation
-2024/2/13 06:10:25 CLSRSC-594: Executing installation step 3 of 19: 'CheckFirstNode'.
-2024/2/13 06:10:27 CLSRSC-594: Executing installation step 4 of 19: 'GenSiteGUIDs'.
-2024/2/13 06:10:29 CLSRSC-594: Executing installation step 5 of 19: 'SetupOSD'.
-2024/2/13 06:10:29 CLSRSC-594: Executing installation step 6 of 19: 'CheckCRSConfig'.
-2024/2/13 06:10:30 CLSRSC-594: Executing installation step 7 of 19: 'SetupLocalGPNP'.
-2024/2/13 06:11:14 CLSRSC-594: Executing installation step 8 of 19: 'CreateRootCert'.
-2024/2/13 06:11:22 CLSRSC-594: Executing installation step 9 of 19: 'ConfigOLR'.
-2024/2/13 06:11:31 CLSRSC-4002: Successfully installed Oracle Trace File Analyzer (TFA) Collector.
-2024/2/13 06:11:46 CLSRSC-594: Executing installation step 10 of 19: 'ConfigCHMOS'.
-2024/2/13 06:11:46 CLSRSC-594: Executing installation step 11 of 19: 'CreateOHASD'.
-2024/2/13 06:11:55 CLSRSC-594: Executing installation step 12 of 19: 'ConfigOHASD'.
-2024/2/13 06:11:55 CLSRSC-330: Adding Clusterware entries to file 'oracle-ohasd.service'
-2024/2/13 06:12:20 CLSRSC-594: Executing installation step 13 of 19: 'InstallAFD'.
-2024/2/13 06:12:29 CLSRSC-594: Executing installation step 14 of 19: 'InstallACFS'.
-2024/2/13 06:12:37 CLSRSC-594: Executing installation step 15 of 19: 'InstallKA'.
-2024/2/13 06:12:45 CLSRSC-594: Executing installation step 16 of 19: 'InitConfig'.
+  /u01/app/oracle/crsdata/ol931/crsconfig/rootcrs_ol931_2024-01-31_09-51-07PM.log
+2024/01/31 21:52:18 CLSRSC-594: Executing installation step 1 of 19: 'ValidateEnv'.
+2024/01/31 21:52:19 CLSRSC-594: Executing installation step 2 of 19: 'CheckFirstNode'.
+2024/01/31 21:52:26 CLSRSC-594: Executing installation step 3 of 19: 'GenSiteGUIDs'.
+2024/01/31 21:52:32 CLSRSC-594: Executing installation step 4 of 19: 'SetupOSD'.
+2024/01/31 21:52:33 CLSRSC-594: Executing installation step 5 of 19: 'CheckCRSConfig'.
+2024/01/31 21:52:34 CLSRSC-594: Executing installation step 6 of 19: 'SetupLocalGPNP'.
+2024/01/31 21:52:36 CLSRSC-594: Executing installation step 7 of 19: 'CreateRootCert'.
+2024/01/31 21:52:55 CLSRSC-594: Executing installation step 8 of 19: 'ConfigOLR'.
+2024/01/31 21:52:57 CLSRSC-594: Executing installation step 9 of 19: 'ConfigCHMOS'.
+2024/01/31 21:53:29 CLSRSC-594: Executing installation step 10 of 19: 'CreateOHASD'.
+2024/01/31 21:53:30 CLSRSC-594: Executing installation step 11 of 19: 'ConfigOHASD'.
+2024/01/31 21:53:42 CLSRSC-594: Executing installation step 12 of 19: 'SetupTFA'.
+2024/01/31 21:53:42 CLSRSC-594: Executing installation step 13 of 19: 'InstallAFD'.
+2024/01/31 21:53:42 CLSRSC-594: Executing installation step 14 of 19: 'InstallACFS'.
+2024/01/31 21:53:46 CLSRSC-594: Executing installation step 15 of 19: 'InstallKA'.
+2024/01/31 21:54:31 CLSRSC-594: Executing installation step 16 of 19: 'InitConfig'.
+2024/01/31 21:55:11 CLSRSC-4002: Successfully installed Oracle Trace File Analyzer (TFA) Collector.
 
-ASM has been created and started successfully.
+[INFO] [DBT-30161] Disk label(s) created successfully. Check /u01/app/oracle/cfgtoollogs/asmca/asmca-240131PM095538.log for details.
 
-[DBT-30001] Disk groups created successfully. Check /u01/app/oracle/cfgtoollogs/asmca/asmca-191119AM061319.log for details.
 
-2024/2/13 06:14:25 CLSRSC-482: Running command: '/u01/app/19.0.0/grid/bin/ocrconfig -upgrade oracle oinstall'
+2024/01/31 21:57:24 CLSRSC-482: Running command: '/u01/app/19.0.0/grid/bin/ocrconfig -upgrade oracle oinstall'
 CRS-4256: Updating the profile
-Successful addition of voting disk 82896a1404774fa1bf7404bea502e526.
+Successful addition of voting disk 27e985d9ed4f4fbdbf281c0028d8dc2b.
 Successfully replaced voting disk group with +DATA.
 CRS-4256: Updating the profile
 CRS-4266: Voting file(s) successfully replaced
 ##  STATE    File Universal Id                File Name Disk group
 --  -----    -----------------                --------- ---------
- 1. ONLINE   82896a1404774fa1bf7404bea502e526 (/dev/sdb1) [DATA]
+ 1. ONLINE   27e985d9ed4f4fbdbf281c0028d8dc2b (AFD:DATA1) [DATA]
 Located 1 voting disk(s).
-2024/2/13 06:16:33 CLSRSC-594: Executing installation step 17 of 19: 'StartCluster'.
-2024/2/13 06:18:09 CLSRSC-343: Successfully started Oracle Clusterware stack
-2024/2/13 06:18:09 CLSRSC-594: Executing installation step 18 of 19: 'ConfigNode'.
-2024/2/13 06:22:17 CLSRSC-594: Executing installation step 19 of 19: 'PostConfig'.
-2024/2/13 06:23:13 CLSRSC-325: Configure Oracle Grid Infrastructure for a Cluster ... succeeded
+
+2024/01/31 22:06:42 CLSRSC-594: Executing installation step 17 of 19: 'StartCluster'.
+2024/01/31 22:07:52 CLSRSC-343: Successfully started Oracle Clusterware stack
+2024/01/31 22:07:52 CLSRSC-594: Executing installation step 18 of 19: 'ConfigNode'.
+2024/01/31 22:11:24 CLSRSC-594: Executing installation step 19 of 19: 'PostConfig'.
+2024/01/31 22:13:01 CLSRSC-325: Configure Oracle Grid Infrastructure for a Cluster ... succeeded
 [root@ol9-19c-rac1 ~]# su - oracle
 Last login: Tue Nov 19 06:23:11 EST 2019 on pts/1
 ss[oracle@ol9-19c-rac1 ~]$ ssh ol9-19c-rac2
@@ -1201,7 +1207,7 @@ Enter "/u01/app/oracle" as the Oracle base, then click the "Next" button.
 ![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-194639@2x.png> "Install the Database Software")
 Select the desired operating system groups, then click the "Next" button. In this case we are only using the "dba" group.
 ![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-194725@2x.png> "Install the Database Software")
-Accept the default options, and click “Next” button.
+Accept the default options, and click "Next" button.
 ![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-194734@2x.png> "Install the Database Software")
 Wait for the prerequisite check to complete. If there are any problems either click the "Fix & Check Again" button, or check the "Ignore All" checkbox and click the "Next" button.
 ![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-195031@2x.png> "Install the Database Software")
@@ -1237,19 +1243,19 @@ Make sure both nodes are selected, then click the "Next" button.
 ![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-200615@2x.png> "Create a Database")
 Enter the container database name (cdbrac), pluggable database name (pdb) and administrator password. Click the "Next" button.
 ![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-200740@2x.png> "Create a Database")
-Accept the default values, and click “Next” button.
+Accept the default values, and click "Next" button.
 ![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-200818@2x.png> "Create a Database")
-Accept the default values, and click “Next” button.
+Accept the default values, and click "Next" button.
 ![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-200859@2x.png> "Create a Database")
-Accept the default values, and click “Next” button.
+Accept the default values, and click "Next" button.
 ![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-200942@2x.png> "Create a Database")
-Accept the default values, and click “Next” button.
+Accept the default values, and click "Next" button.
 ![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-201022@2x.png> "Create a Database")
 
 ![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-201044@2x.png> "Create a Database")
-Deselect the CVU and EM options, and click “Next” button.
+Deselect the CVU and EM options, and click "Next" button.
 ![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-201119@2x.png> "Create a Database")
-Enter dba password, and click “Next” button.
+Enter dba password, and click "Next" button.
 ![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-201137@2x.png> "Create a Database")
 
 ![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-201149@2x.png> "Create a Database")
@@ -1257,7 +1263,7 @@ Enter dba password, and click “Next” button.
 ![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-201216@2x.png> "Create a Database")
 
 ![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-201309@2x.png> "Create a Database")
-Select “Ignore All”, and click “Next” button.
+Select "Ignore All", and click "Next" button.
 ![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-201424@2x.png> "Create a Database")
 If you are happy with the summary information, click the "Finish" button.
 ![19c_RAC_install](<./19c_RAC_install_OL9/Jietu20191119-201435@2x.png> "Create a Database")
